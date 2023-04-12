@@ -9,19 +9,20 @@
 
 namespace view {
 
-ExistingNode::ExistingNode(int x,int y,int width, int height) : Fl_Text_Display(x,y,width,height) {
+ExistingNode::ExistingNode(int x,int y,int width, int height,Node* node) : Fl_Text_Display(x,y,width,height) {
+	this->node = node;
+
 	Fl_Text_Buffer* boxTextBuffer = new Fl_Text_Buffer();
 	this->buffer(boxTextBuffer);
-	boxTextBuffer->text("-10");
 
-//	try {
-//		string nodeNumber = toString(this->node->getNumber(), "Node does not contain a number.");
-//		boxTextBuffer->text(nodeNumber.c_str());
-//	}
-//	catch (const char* message)
-//	{
-//		fl_message("%s", message);
-//	}
+	try {
+		string nodeNumber = toString(this->node->getNumber(), "Node does not contain a number.");
+		boxTextBuffer->text(nodeNumber.c_str());
+	}
+	catch (const char* message)
+	{
+		fl_message("%s", message);
+	}
 }
 
 ExistingNode::~ExistingNode() {

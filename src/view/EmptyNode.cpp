@@ -9,7 +9,8 @@
 
 namespace view {
 
-EmptyNode::EmptyNode(int x,int y,int width,int height,const char * title) : Fl_Int_Input(x, y, width, height, title) {
+EmptyNode::EmptyNode(int x,int y,int width,int height,const char * title,Node* node) : Fl_Int_Input(x, y, width, height, title) {
+	this->node = node;
 }
 
 EmptyNode::~EmptyNode() {
@@ -26,10 +27,9 @@ int EmptyNode::handle(int e) {
 					break;
 				}
 
-				cout << valueString << endl;
-//				int value = toInt(valueString, "Please enter a number.");
-//				this->node->setNumber(value);
-//				ret = 1;
+				int value = toInt(valueString, "Please enter a number.");
+				this->node->setNumber(value);
+				ret = 1;
 				break;
 			}
 			catch (const char* message)

@@ -48,14 +48,15 @@ GameWindow::GameWindow(int width, int height, const char* title) : Fl_Window(wid
     		if (i == 7) {
     			nodeNumber = 12;
     		}
+    		Node* newNode = new Node(nodeNumber); // FIXME: Replace this with retrieval of next node to display
 
-    		if (nodeNumber < 1) {
-    			EmptyNode* newEmptyBox = new EmptyNode(inputX, inputY, inputBoxWidth, inputBoxHeight, "");
+    		if (newNode->getNumber() < 1) {
+    			EmptyNode* newEmptyBox = new EmptyNode(inputX, inputY, inputBoxWidth, inputBoxHeight, "", newNode);
     			newEmptyBox->textsize(inputBoxFontSize++); // FIXME: Fix font size
     			this->gameBoard.push_back(newEmptyBox);
     		}
     		else {
-    			ExistingNode* newBox = new ExistingNode(inputX, inputY, inputBoxWidth, inputBoxHeight);
+    			ExistingNode* newBox = new ExistingNode(inputX, inputY, inputBoxWidth, inputBoxHeight, newNode);
         		this->gameBoard.push_back(newBox); // FIXME: Fix font size
     		}
     	}

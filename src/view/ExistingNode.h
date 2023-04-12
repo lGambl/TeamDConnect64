@@ -11,11 +11,18 @@
 #include <FL/Fl_Text_Display.H>
 #include <FL/fl_ask.H>
 
+#include "Node.h"
+using namespace model;
+
+#include "Utils.h"
+
 namespace view {
 
 class ExistingNode : Fl_Text_Display {
+private:
+	Node* node;
 public:
-	ExistingNode(int x,int y,int width, int height);
+	ExistingNode(int x,int y,int width, int height,Node* node);
 	virtual ~ExistingNode();
 };
 

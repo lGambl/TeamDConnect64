@@ -16,11 +16,18 @@
 #include <string>
 using namespace std;
 
+#include "Node.h"
+using namespace model;
+
+#include "Utils.h"
+
 namespace view {
 
 class EmptyNode: public Fl_Int_Input {
+private:
+	Node* node;
 public:
-	EmptyNode(int x,int y,int width,int height,const char* title);
+	EmptyNode(int x,int y,int width,int height,const char* title,Node* node);
 	virtual ~EmptyNode();
 
 	int handle(int e);
