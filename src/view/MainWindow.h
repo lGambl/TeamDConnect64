@@ -14,8 +14,8 @@
 #include <FL/Fl_Box.H>
 #include <string>
 
-//#include "GameWindow.h"
-//using namespace std;
+#include "GameWindow.h"
+using namespace std;
 
 namespace view {
 

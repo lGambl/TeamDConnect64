@@ -18,7 +18,7 @@ MainWindow::MainWindow(int width, int height, const char* title) : Fl_Window(wid
     this->quitButton->callback(cb_quit, this);
 
     this->playNewWindowButton = new Fl_Button(125, 100, 70, 30, "Play");
-//    this->playNewWindowButton->callback(cb_show, this);
+    this->playNewWindowButton->callback(cb_show, this);
 
     this->end();
     this->resizable(this);
@@ -30,13 +30,13 @@ MainWindow::~MainWindow()
 {
 }
 
-//void MainWindow::cb_show(Fl_Widget* o, void* data)
-//{
-//    NewWindow* window = new NewWindow(400, 400, "Game"); // Minimum of 300x300
-//    window->set_modal();
-//    window->show();
-//    while (window->shown()) Fl::wait();
-//}
+void MainWindow::cb_show(Fl_Widget* o, void* data)
+{
+	GameWindow* window = new GameWindow(400, 400, "Game"); // Minimum of 300x300
+    window->set_modal();
+    window->show();
+    while (window->shown()) Fl::wait();
+}
 
 void MainWindow::cb_quit(Fl_Widget* , void* data)
 {
@@ -46,10 +46,6 @@ void MainWindow::cb_quit(Fl_Widget* , void* data)
 void MainWindow::cb_quit_i()
 {
     this->hide();
-}
-
-void MainWindow::updateInputDisplay(const char* text) {
-	this->inputDisplay->copy_label(text);
 }
 
 } /* namespace view */
