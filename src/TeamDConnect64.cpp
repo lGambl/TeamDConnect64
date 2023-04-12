@@ -6,12 +6,12 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-#include <iostream>
-using namespace std;
+#include <MainWindow.h>
+using namespace view;
 
 int main ()
 {
-	cout << "Hello World!!!" << endl;
+	MainWindow window(325, 200, "Team D Connect 64");
 
-    return 0;
+    return (Fl::run());
 }
