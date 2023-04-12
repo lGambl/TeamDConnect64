@@ -1,8 +1,8 @@
 /*
  * ExistingNode.h
  *
- *  Created on: Apr 11, 2023
- *      Author: steven
+ *  Created on: April 11, 2023
+ *      Author: Steven Kight
  */
 
 #ifndef VIEW_EXISTINGNODE_H_
@@ -18,11 +18,28 @@ using namespace model;
 
 namespace view {
 
-class ExistingNode : Fl_Text_Display {
+class ExistingNode: Fl_Text_Display {
 private:
-	Node* node;
+	Node *node;
+	Fl_Text_Buffer *boxTextBuffer;
 public:
-	ExistingNode(int x,int y,int width, int height,Node* node);
+	/**
+	 * Initializes an existing node control.
+	 *
+	 * @precondition none
+	 * @postcondition this->node = node
+	 *
+	 * @param x The x position of the window.
+	 * @param y The y position of the window.
+	 * @param width The width of the window.
+	 * @param height The height of the window.
+	 * @param node The node the control refers to.
+	 */
+	ExistingNode(int x, int y, int width, int height, Node *node);
+
+	/**
+	 * Deconstructor for the existing node control.
+	 */
 	virtual ~ExistingNode();
 };
 

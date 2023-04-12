@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : TeamDConnect64.cpp
 // Author      : Team D
-// Version     :
+// Version     : Spring 2023
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
 //============================================================================
@@ -9,9 +9,8 @@
 #include <MainWindow.h>
 using namespace view;
 
-int main ()
-{
+int main() {
 	MainWindow window(325, 200, "Team D Connect 64");
 
-    return (Fl::run());
+	return (Fl::run());
 }

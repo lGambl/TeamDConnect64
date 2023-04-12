@@ -1,8 +1,8 @@
 /*
  * Node.cpp
  *
- *  Created on: Apr 11, 2023
- *      Author: steven
+ *  Created on: April 11, 2023
+ *      Author: Steven Kight
  */
 
 #include "Node.h"
@@ -19,7 +19,7 @@ Node::Node(int number) {
 }
 
 Node::~Node() {
-	// TODO Auto-generated destructor stub
+	// TODO: Delete all nodes when done.
 }
 
 } /* namespace model */

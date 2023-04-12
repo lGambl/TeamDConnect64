@@ -1,8 +1,8 @@
 /*
  * Utils.cpp
  *
- *  Created on: Apr 11, 2023
- *      Author: steven
+ *  Created on: April 11, 2023
+ *      Author: Steven Kight
  */
 
 #include "Utils.h"
@@ -23,9 +23,7 @@ int toInt(const string &text, const char *errorMessage) {
 string toString(int value, const char *errorMessage) {
 	try {
 		return to_string(value);
+	} catch (const char *message) {
+		throw message;
 	}
-    catch (const char* message)
-    {
-    	throw message;
-    }
 }

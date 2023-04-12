@@ -1,8 +1,8 @@
 /*
- * NewWindow.h
+ * GameWindow.h
  *
- *  Created on: Mar 15, 2023
- *      Author: dyoder
+ *  Created on: April 11, 2023
+ *      Author: Steven Kight
  */
 
 #ifndef VIEW_GAMEWINDOW_H_
@@ -22,22 +22,35 @@ using namespace std;
 
 namespace view {
 
-class GameWindow : public Fl_Window
-{
+class GameWindow: public Fl_Window {
 private:
-    Fl_Button* closeButton;
+	Fl_Button *closeButton;
 
-    int numberRows;
-    int numberColumns;
+	int numberRows;
+	int numberColumns;
 
-    vector<void*> gameBoard;
+	vector<void*> gameBoard;
 
 public:
-    GameWindow(int width, int height, const char* title );
-    ~GameWindow();
+	/**
+	 * Initializes a game window for display.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param width The width of the window.
+	 * @param height The height of the window.
+	 * @param title The title of the window.
+	 */
+	GameWindow(int width, int height, const char *title);
+
+	/**
+	 * Deconstructor for the game window display.
+	 */
+	~GameWindow();
 
 private:
-    static void cb_close(Fl_Widget*, void*);
+	static void cb_close(Fl_Widget*, void*);
 };
 
 } /* namespace view */
