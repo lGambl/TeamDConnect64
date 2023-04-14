@@ -12,6 +12,7 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Output.H>
 
 #include "EmptyNode.h"
 #include "ExistingNode.h"
@@ -24,12 +25,29 @@ namespace view {
 
 class GameWindow: public Fl_Window {
 private:
+	Fl_Output *timer;
 	Fl_Button *closeButton;
 
 	int numberRows;
 	int numberColumns;
 
+	int inputBoxWidth;
+	int inputBoxHeight;
+
+	int otherObjectsWidth;
+	int otherObjectsHeight;
+
+	int widthCenteringFactor;
+	int heightCenteringFactor;
+	int widthCentering;
+	int heightCentering;
+
+	int middleX;
+	int closeButtonY;
+	int timerY;
+
 	vector<void*> gameBoard;
+	static const int MINIMUM_SIZE = 300;
 
 public:
 	/**
@@ -51,6 +69,8 @@ public:
 
 private:
 	static void cb_close(Fl_Widget*, void*);
+	void buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize);
+	Fl_Fontsize calculateSizes(int width, int height);
 };
 
 } /* namespace view */

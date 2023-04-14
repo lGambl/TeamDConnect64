@@ -10,23 +10,19 @@
 namespace view {
 
 ExistingNode::ExistingNode(int x, int y, int width, int height, Node *node) :
-		Fl_Text_Display(x, y, width, height) {
+		Fl_Output(x, y, width, height) {
 	this->node = node;
-
-	this->boxTextBuffer = new Fl_Text_Buffer();
-	this->buffer(this->boxTextBuffer);
 
 	try {
 		string nodeNumber = toString(this->node->getNumber(),
 				"Node does not contain a number.");
-		boxTextBuffer->text(nodeNumber.c_str());
+		this->value(nodeNumber.c_str());
 	} catch (const char *message) {
 		fl_message("%s", message);
 	}
 }
 
 ExistingNode::~ExistingNode() {
-	delete this->boxTextBuffer;
 }
 
 } /* namespace view */

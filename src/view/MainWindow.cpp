@@ -29,7 +29,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::cb_show(Fl_Widget *o, void *data) {
-	GameWindow *window = new GameWindow(400, 400, "Game"); // Minimum of 300x300
+	GameWindow *window = new GameWindow(300, 300, "Game");
 	window->set_modal();
 	window->show();
 	while (window->shown())

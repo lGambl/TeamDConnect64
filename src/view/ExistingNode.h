@@ -8,7 +8,7 @@
 #ifndef VIEW_EXISTINGNODE_H_
 #define VIEW_EXISTINGNODE_H_
 
-#include <FL/Fl_Text_Display.H>
+#include <FL/Fl_Output.H>
 #include <FL/fl_ask.H>
 
 #include "Node.h"
@@ -18,10 +18,9 @@ using namespace model;
 
 namespace view {
 
-class ExistingNode: Fl_Text_Display {
+class ExistingNode: Fl_Output {
 private:
 	Node *node;
-	Fl_Text_Buffer *boxTextBuffer;
 public:
 	/**
 	 * Initializes an existing node control.

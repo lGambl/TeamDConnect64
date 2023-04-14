@@ -26,6 +26,9 @@ namespace view {
 class EmptyNode: public Fl_Int_Input {
 private:
 	Node *node;
+	int maxNumber;
+
+	void valueOutOfBounds();
 public:
 	/**
 	 * Initializes an existing node control.
@@ -40,7 +43,7 @@ public:
 	 * @param tag The tag for the input box.
 	 * @param node The node the control refers to.
 	 */
-	EmptyNode(int x, int y, int width, int height, const char *tag, Node *node);
+	EmptyNode(int x, int y, int width, int height, const char *tag, int maxNumber, Node *node);
 
 	/**
 	 * Deconstructor for the existing node control.
