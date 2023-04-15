@@ -71,28 +71,56 @@ Fl_Fontsize GameWindow::calculateSizes(int width, int height) { // FIXME: Doesn'
 
 void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 
-	for (int i = 0; i < numberRows; i++) {
-		for (int j = 0; j < numberColumns; j++) {
+//	for (int i = 0; i < numberRows; i++) {
+//		for (int j = 0; j < numberColumns; j++) {
+//
+//			int inputX = i * this->inputBoxWidth + this->widthCentering;
+//			int inputY = j * this->inputBoxHeight + this->heightCentering;
+//			Node *newNode = new Node(-1); // FIXME: Replace this with retrieval of next node to display (<1 gives input box and >1 gives display box)
+//
+//			void *newControl;
+//			if (newNode->getNumber() < 1) {
+//				newControl = new EmptyNode(inputX, inputY, this->inputBoxWidth,
+//						this->inputBoxHeight, "", maxNumber, newNode);
+//
+//			} else {
+//				newControl = new ExistingNode(inputX, inputY,
+//						this->inputBoxWidth, this->inputBoxHeight, newNode);
+//
+//			}
+//
+//			this->gameBoard.push_back(newControl); // FIXME: Fix font size
+//		}
+//	}
+	FileHandler handler = FileHandler();
 
-			int inputX = i * this->inputBoxWidth + this->widthCentering;
-			int inputY = j * this->inputBoxHeight + this->heightCentering;
+	vector<Node*> nodes = handler.readNodeFile(
+			"/home/larry/Downloads/TeamXConnect64/src/board.txt");
 
-			Node *newNode = new Node(-1); // FIXME: Replace this with retrieval of next node to display (<1 gives input box and >1 gives display box)
+	this->board = new Board();
 
-			void *newControl;
-			if (newNode->getNumber() < 1) {
-				newControl = new EmptyNode(inputX, inputY, this->inputBoxWidth,
-						this->inputBoxHeight, "", maxNumber, newNode);
+	board->loadBoard(nodes);
+	int counter = 0;
+	for (Node *node : nodes) {
+		void *newControl;
+		cout << to_string(counter) + " " << to_string(node->getNumber()) << endl;
+		int inputX = node->getXpos() * this->inputBoxWidth + this->widthCentering;
+		int inputY = node->getYpos() * this->inputBoxHeight + this->heightCentering;
 
-			} else {
-				newControl = new ExistingNode(inputX, inputY,
-						this->inputBoxWidth, this->inputBoxHeight, newNode);
+		if (node->getNumber() < 1) {
+			newControl = new EmptyNode(inputX, inputY,
+					this->inputBoxWidth, this->inputBoxHeight, "", maxNumber,
+					node);
 
-			}
-
-			this->gameBoard.push_back(newControl); // FIXME: Fix font size
+		} else {
+			newControl = new ExistingNode(inputY, inputY,
+					this->inputBoxWidth, this->inputBoxHeight, node);
 		}
+
+		this->gameBoard.push_back(newControl);
+		counter++;
 	}
+
 }
 
 GameWindow::~GameWindow() {

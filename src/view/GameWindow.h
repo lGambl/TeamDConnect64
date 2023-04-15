@@ -21,6 +21,13 @@
 #include <vector>
 using namespace std;
 
+#include <Node.h>
+#include <Board.h>
+using namespace model;
+
+#include <FileHandler.h>
+using namespace datatier;
+
 namespace view {
 
 class GameWindow: public Fl_Window {
@@ -45,6 +52,8 @@ private:
 	int middleX;
 	int closeButtonY;
 	int timerY;
+
+	Board* board;
 
 	vector<void*> gameBoard;
 	static const int MINIMUM_SIZE = 300;
