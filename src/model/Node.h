@@ -13,6 +13,8 @@ namespace model {
 class Node {
 private:
 	int number;
+	int xpos;
+	int ypos;
 
 	Node *north;
 	Node *south;
@@ -27,8 +29,10 @@ public:
 	 * @postcondition this->number = number
 	 *
 	 * @param number The number the node stores
+	 * @param xpos x position of node
+	 * @param ypos y position of node
 	 */
-	Node(int number);
+	Node(int number, int xpos, int ypos);
 
 	/**
 	 * Deconstructor for the node.
@@ -154,6 +158,50 @@ public:
 	void setWest(Node *&west) {
 		this->west = west;
 	}
+
+	/**
+	 * Getter for the x position.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The x position of the node
+	 */
+	int& getXpos() {
+		return this->xpos;
+	}
+
+	/**
+	 * Getter for the y position.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The y position of the node
+	 */
+	int& getYpos() {
+		return this->ypos;
+	}
+
+	/**
+	 * Checks if the node is connect to other nodes correctly
+	 *
+	 * @pre none
+	 * @post none
+	 *
+	 * @return true if connect correctly, false if not
+	 */
+	bool isConnected();
+
+	/**
+	 * Gets the node that next if the node is connected properly
+	 *
+	 * @pre none
+	 * @post none
+	 *
+	 * @return the connected node if there is one. If not return nullptr.
+	 */
+	Node* getConnectedUpperNode();
 };
 
 } /* namespace model */
