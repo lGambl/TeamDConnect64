@@ -9,10 +9,8 @@
 
 namespace model {
 
-Node::Node(int number, int xpos, int ypos) {
+Node::Node(int number) {
 	this->number = number;
-	this->xpos = xpos;
-	this->ypos = ypos;
 
 	this->north = nullptr;
 	this->east = nullptr;
@@ -37,58 +35,53 @@ Node::~Node() {
 }
 
 bool Node::isConnected() {
-	int north = this->getNorth()->number;
-	int south = this->getSouth()->number;
-	int west = this->getWest()->number;
-	int east = this->getEast()->number;
-
 	bool hasLowerNode = false;
 	bool hasUpperNode = false;
 
-	if (north == this->number + 1) {
+	if (this->north != nullptr && this->north->getNumber() == this->number + 1) {
 		if (!hasUpperNode) {
 			hasUpperNode = true;
 		} else {
 			return false;
 		}
-	} else if (north == this->number - 1) {
+	} else if (this->north != nullptr && this->north->getNumber() == this->number - 1) {
 		if (!hasLowerNode) {
 			hasLowerNode = true;
 		}
 	}
-	if (south == this->number + 1) {
+	if (this->south != nullptr && this->south->getNumber() == this->number + 1) {
 		if (!hasUpperNode) {
 			hasUpperNode = true;
 		} else {
 			return false;
 		}
-	} else if (south == this->number - 1) {
-		if (!hasLowerNode) {
-			hasLowerNode = true;
-		} else {
-			return false;
-		}
-	}
-	if (east == this->number + 1) {
-		if (!hasUpperNode) {
-			hasUpperNode = true;
-		} else {
-			return false;
-		}
-	} else if (east == this->number - 1) {
+	} else if (this->south != nullptr && this->south->getNumber() == this->number - 1) {
 		if (!hasLowerNode) {
 			hasLowerNode = true;
 		} else {
 			return false;
 		}
 	}
-	if (west == this->number + 1) {
+	if (this->east != nullptr && this->east->getNumber() == this->number + 1) {
 		if (!hasUpperNode) {
 			hasUpperNode = true;
 		} else {
 			return false;
 		}
-	} else if (west == this->number - 1) {
+	} else if (this->east != nullptr && this->east->getNumber() == this->number - 1) {
+		if (!hasLowerNode) {
+			hasLowerNode = true;
+		} else {
+			return false;
+		}
+	}
+	if (this->west != nullptr && this->west->getNumber() == this->number + 1) {
+		if (!hasUpperNode) {
+			hasUpperNode = true;
+		} else {
+			return false;
+		}
+	} else if (this->west != nullptr && this->west->getNumber() == this->number - 1) {
 		if (!hasLowerNode) {
 			hasLowerNode = true;
 		} else {
@@ -101,21 +94,24 @@ bool Node::isConnected() {
 }
 
 Node* Node::getConnectedUpperNode() {
-	if (this->isConnected()) {
-		if (this->north->getNumber() == this->number + 1) {
+//	if (this->isConnected()) {
+		if (this->north != nullptr && this->north->getNumber() == this->number + 1) {
 			return this->north;
 		}
-		if (this->south->getNumber() == this->number + 1) {
+		if (this->south != nullptr && this->south->getNumber() == this->number + 1) {
 			return this->south;
 		}
-		if (this->east->getNumber() == this->number + 1) {
+		if (this->east != nullptr && this->east->getNumber() == this->number + 1) {
 			return this->east;
 		}
-		if (this->west->getNumber() == this->number + 1) {
+		if (this->west != nullptr && this->west->getNumber() == this->number + 1) {
 			return this->west;
 		}
-	}
-	return nullptr;
+		else {
+			return nullptr;
+		}
+//	}
+//	return nullptr;
 }
 
 } /* namespace model */

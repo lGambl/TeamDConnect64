@@ -46,6 +46,7 @@ int EmptyNode::handle(int e) {
 			fl_message("%s", message.what());
 		}
 	}
+
 	return ret; // pass back subclass's handle return code
 }
 

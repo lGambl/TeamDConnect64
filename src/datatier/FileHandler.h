@@ -47,7 +47,7 @@ public:
 	 * @param fileName
 	 * @return vector of node pointer
 	 */
-	vector<Node*> readNodeFile(const string fileName);
+	vector<Node*> readNodeFile(const string fileName, int difficulty);
 };
 
 } /* namespace datatier */

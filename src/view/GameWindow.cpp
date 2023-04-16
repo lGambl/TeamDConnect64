@@ -21,8 +21,15 @@ GameWindow::GameWindow(int width, int height, const char *title) :
 				"Height must be greater than or equal to " + MINIMUM_SIZE);
 	}
 
-	this->numberRows = 8;
-	this->numberColumns = 8;
+	int difficulty = 0;
+
+	this->board = new Board();
+	this->board->loadBoard(difficulty);
+
+	this->nodes = this->board->getNodes();
+
+	this->numberRows = this->board->getNumberRows();
+	this->numberColumns = this->board->getNumberColumns();
 	int maxNumber = this->numberColumns * this->numberRows;
 
 	Fl_Fontsize inputBoxFontSize = calculateSizes(width, height);
@@ -31,12 +38,19 @@ GameWindow::GameWindow(int width, int height, const char *title) :
 
 	this->buildNodeSquares(maxNumber, inputBoxFontSize);
 
+	string puzzleTitle = "Puzzle " + toString(difficulty, "Invalid difficulty value");
 	this->timer = new Fl_Output(this->middleX, this->timerY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "");
+	this->timer->value(puzzleTitle.c_str());
+	this->timer->align(FL_ALIGN_CENTER);
 
-	this->closeButton = new Fl_Button(this->middleX, this->closeButtonY,
+	this->closeButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
 	this->closeButton->callback(cb_close, this);
+
+	this->checkButton = new Fl_Button(this->middleX + this->otherObjectsWidth / 2, this->closeButtonY,
+				this->otherObjectsWidth, this->otherObjectsHeight, "Check");
+	this->checkButton->callback(cb_check, this);
 
 	this->end();
 	this->size_range(MINIMUM_SIZE, MINIMUM_SIZE);
@@ -71,54 +85,27 @@ Fl_Fontsize GameWindow::calculateSizes(int width, int height) { // FIXME: Doesn'
 
 void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 
-//	for (int i = 0; i < numberRows; i++) {
-//		for (int j = 0; j < numberColumns; j++) {
-//
-//			int inputX = i * this->inputBoxWidth + this->widthCentering;
-//			int inputY = j * this->inputBoxHeight + this->heightCentering;
-//			Node *newNode = new Node(-1); // FIXME: Replace this with retrieval of next node to display (<1 gives input box and >1 gives display box)
-//
-//			void *newControl;
-//			if (newNode->getNumber() < 1) {
-//				newControl = new EmptyNode(inputX, inputY, this->inputBoxWidth,
-//						this->inputBoxHeight, "", maxNumber, newNode);
-//
-//			} else {
-//				newControl = new ExistingNode(inputX, inputY,
-//						this->inputBoxWidth, this->inputBoxHeight, newNode);
-//
-//			}
-//
-//			this->gameBoard.push_back(newControl); // FIXME: Fix font size
-//		}
-//	}
-	FileHandler handler = FileHandler();
+	int index = 0;
+	for (int i = 0; i < numberColumns; i++) {
+		for (int j = 0; j < numberRows; j++) {
 
-	vector<Node*> nodes = handler.readNodeFile(
-			"/home/larry/Downloads/TeamXConnect64/src/board.txt");
+			int inputX = j * this->inputBoxWidth + this->widthCentering;
+			int inputY = i * this->inputBoxHeight + this->heightCentering;
 
-	this->board = new Board();
+			Node *newNode = this->nodes[index++];
 
-	board->loadBoard(nodes);
-	int counter = 0;
-	for (Node *node : nodes) {
-		void *newControl;
-		cout << to_string(counter) + " " << to_string(node->getNumber()) << endl;
-		int inputX = node->getXpos() * this->inputBoxWidth + this->widthCentering;
-		int inputY = node->getYpos() * this->inputBoxHeight + this->heightCentering;
+			void *newControl;
+			if (newNode->getNumber() < 1) {
+				newControl = new EmptyNode(inputX, inputY, this->inputBoxWidth,
+						this->inputBoxHeight, "", maxNumber, newNode);
 
-		if (node->getNumber() < 1) {
-			newControl = new EmptyNode(inputX, inputY,
-					this->inputBoxWidth, this->inputBoxHeight, "", maxNumber,
-					node);
+			} else {
+				newControl = new ExistingNode(inputX, inputY,
+						this->inputBoxWidth, this->inputBoxHeight, newNode);
+			}
 
-		} else {
-			newControl = new ExistingNode(inputY, inputY,
-					this->inputBoxWidth, this->inputBoxHeight, node);
+			this->gameBoard.push_back(newControl); // FIXME: Fix font size
 		}
-
-		this->gameBoard.push_back(newControl);
-		counter++;
 	}
 
 }
@@ -128,6 +115,10 @@ GameWindow::~GameWindow() {
 
 void GameWindow::cb_close(Fl_Widget*, void *data) {
 	((GameWindow*) data)->hide();
+}
+
+void GameWindow::cb_check(Fl_Widget*, void *data) {
+	cout << ((GameWindow*) data)->board->isSolved() << endl;
 }
 
 } /* namespace view */

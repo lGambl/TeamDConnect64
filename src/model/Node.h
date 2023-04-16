@@ -13,8 +13,6 @@ namespace model {
 class Node {
 private:
 	int number;
-	int xpos;
-	int ypos;
 
 	Node *north;
 	Node *south;
@@ -29,10 +27,8 @@ public:
 	 * @postcondition this->number = number
 	 *
 	 * @param number The number the node stores
-	 * @param xpos x position of node
-	 * @param ypos y position of node
 	 */
-	Node(int number, int xpos, int ypos);
+	Node(int number);
 
 	/**
 	 * Deconstructor for the node.
@@ -157,30 +153,6 @@ public:
 	 */
 	void setWest(Node *&west) {
 		this->west = west;
-	}
-
-	/**
-	 * Getter for the x position.
-	 *
-	 * @precondition none
-	 * @postcondition none
-	 *
-	 * @return The x position of the node
-	 */
-	int& getXpos() {
-		return this->xpos;
-	}
-
-	/**
-	 * Getter for the y position.
-	 *
-	 * @precondition none
-	 * @postcondition none
-	 *
-	 * @return The y position of the node
-	 */
-	int& getYpos() {
-		return this->ypos;
 	}
 
 	/**

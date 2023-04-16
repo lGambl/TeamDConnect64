@@ -15,14 +15,22 @@
 #include <algorithm>
 using namespace std;
 
+#include <FileHandler.h>
+using namespace datatier;
+
 namespace model {
 
 class Board {
 private:
 	Node *firstNode;
+	vector<Node*> nodes;
+
+	uint numberColumns;
+	uint numberRows;
+	int nodeCount;
+
 	bool checkIfNodeSolved(Node *node);
 public:
-	const int MAX_VALUE = 64;
 	const int MIN_VALUE = 1;
 
 	/**
@@ -49,7 +57,7 @@ public:
 	 *
 	 * @return true if the board was loaded correctly and false if not
 	 */
-	bool loadBoard(vector<Node*> nodes);
+	bool loadBoard(int difficulty);
 
 	/**
 	 * Checks if the board is solved
@@ -58,6 +66,41 @@ public:
 	 */
 	bool isSolved();
 
+	/**
+	 * Getter for the number of columns on the board.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The number of columns on the board
+	 */
+	int getNumberColumns() const {
+		return numberColumns;
+	}
+
+	/**
+	 * Getter for the number of rows on the board.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The number of rows on the board
+	 */
+	int getNumberRows() const {
+		return numberRows;
+	}
+
+	/**
+	 * Getter for the nodes on the board.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The nodes on the board
+	 */
+	const vector<Node*>& getNodes() const {
+		return nodes;
+	}
 };
 
 } /* namespace model */

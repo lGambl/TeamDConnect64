@@ -17,45 +17,32 @@ FileHandler::~FileHandler() {
 
 }
 
-vector<Node*> FileHandler::readNodeFile(const string fileName) {
+vector<Node*> FileHandler::readNodeFile(const string fileName, int difficulty) {
 	ifstream infile(fileName);
 	if (!infile) {
 		throw invalid_argument("\nFile " + fileName + " does not exist\n");
 	}
+
 	vector<Node*> nodes;
 	string line;
-	vector<int> usedNumbers;
 
-	int number;
-	int xpos;
-	int ypos;
-
+	int lineNumber = 0;
 	while (getline(infile, line)) {
 
-		stringstream ss;
-		vector<int> values = this->splitByComma(line);
-		try {
-			number = values[0];
-			xpos = values[1];
-			ypos = values[2];
-			if (number != -1) {
-				usedNumbers.push_back(number);
+		if (lineNumber++ == difficulty) {
+
+			stringstream ss;
+			vector<int> values = splitByComma(line);
+
+			for (int value : values) {
+				nodes.push_back(new Node(value));
 			}
-			Node *node = new Node(number, xpos, ypos);
-			nodes.push_back(node);
-		} catch (const char *message) {
-			infile.close();
+
 			return nodes;
 		}
+	}
 
-	}
-	if (nodes.size() == 64) {
-		infile.close();
-		return nodes;
-	} else {
-		throw std::invalid_argument(
-				"File must contain 64 nodes. <number>,<x position>,<y position>");
-	}
+	return nodes;
 }
 
 vector<int> FileHandler::splitByComma(const std::string& s) {

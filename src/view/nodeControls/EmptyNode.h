@@ -21,6 +21,8 @@ using namespace model;
 
 #include "Utils.h"
 
+#include "GameWindow.h"
+
 namespace view {
 
 class EmptyNode: public Fl_Int_Input {

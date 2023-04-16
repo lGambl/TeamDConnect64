@@ -18,7 +18,7 @@ using namespace model;
 
 namespace view {
 
-class ExistingNode: Fl_Output {
+class ExistingNode: public Fl_Output {
 private:
 	Node *node;
 public:
