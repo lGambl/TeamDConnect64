@@ -11,7 +11,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
-#include <FL/Fl_Box.H>
+#include <FL/Fl_Choice.H>
 #include <string>
 
 #include "GameWindow.h"
@@ -24,7 +24,7 @@ namespace view {
  */
 class MainWindow: public Fl_Window {
 private:
-	Fl_Box *inputDisplay;
+	Fl_Choice *puzzleChoice;
 	Fl_Button *quitButton;
 	Fl_Button *playNewWindowButton;
 

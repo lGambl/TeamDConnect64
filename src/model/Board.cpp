@@ -25,7 +25,7 @@ Board::~Board() {
 bool Board::loadBoard(int difficulty) {
 	FileHandler handler;
 	this->nodes = handler.readNodeFile(
-			"/home/steven/Documents/CS3202/TeamXConnect64/src/board.txt", // FIXME: Find relative path
+			"/home/steven/Documents/CS3202/TeamXConnect64/src/boards.txt", // FIXME: Find relative path
 			difficulty);
 
 	for (vector<Node*>::size_type i = 0; i < this->nodes.size(); i++) {

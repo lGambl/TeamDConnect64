@@ -9,7 +9,7 @@
 
 namespace view {
 
-GameWindow::GameWindow(int width, int height, const char *title) :
+GameWindow::GameWindow(int width, int height, const char *title, int difficulty) :
 		Fl_Window(width, height, title) {
 	if (width < MINIMUM_SIZE) {
 		throw std::invalid_argument(
@@ -20,8 +20,6 @@ GameWindow::GameWindow(int width, int height, const char *title) :
 		throw std::invalid_argument(
 				"Height must be greater than or equal to " + MINIMUM_SIZE);
 	}
-
-	int difficulty = 0;
 
 	this->board = new Board();
 	this->board->loadBoard(difficulty);
@@ -38,19 +36,23 @@ GameWindow::GameWindow(int width, int height, const char *title) :
 
 	this->buildNodeSquares(maxNumber, inputBoxFontSize);
 
-	string puzzleTitle = "Puzzle " + toString(difficulty, "Invalid difficulty value");
+	string puzzleTitle = "Puzzle " + toString(difficulty + 1, "Invalid difficulty value");
 	this->timer = new Fl_Output(this->middleX, this->timerY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "");
 	this->timer->value(puzzleTitle.c_str());
 	this->timer->align(FL_ALIGN_CENTER);
 
-	this->closeButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2, this->closeButtonY,
+	this->closeButton = new Fl_Button(this->middleX - this->otherObjectsWidth - 5, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
 	this->closeButton->callback(cb_close, this);
 
-	this->checkButton = new Fl_Button(this->middleX + this->otherObjectsWidth / 2, this->closeButtonY,
+	this->checkButton = new Fl_Button(this->middleX, this->closeButtonY,
 				this->otherObjectsWidth, this->otherObjectsHeight, "Check");
 	this->checkButton->callback(cb_check, this);
+
+	this->checkButton = new Fl_Button(this->middleX + this->otherObjectsWidth + 5, this->closeButtonY,
+					this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
+		this->checkButton->callback(cb_reset, this);
 
 	this->end();
 	this->size_range(MINIMUM_SIZE, MINIMUM_SIZE);
@@ -94,7 +96,7 @@ void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 
 			Node *newNode = this->nodes[index++];
 
-			void *newControl;
+			Fl_Widget *newControl;
 			if (newNode->getNumber() < 1) {
 				newControl = new EmptyNode(inputX, inputY, this->inputBoxWidth,
 						this->inputBoxHeight, "", maxNumber, newNode);
@@ -119,6 +121,18 @@ void GameWindow::cb_close(Fl_Widget*, void *data) {
 
 void GameWindow::cb_check(Fl_Widget*, void *data) {
 	cout << ((GameWindow*) data)->board->isSolved() << endl;
+}
+
+void GameWindow::cb_reset(Fl_Widget*, void *data) {
+	vector<Fl_Widget*> widgets = ((GameWindow*) data)->gameBoard;
+
+//	for (Fl_Widget* current : widgets) {
+//		try {
+//			EmptyNode* currentEmptyNode = current;
+//		} catch (const char* message) {
+//
+//		}
+//	}
 }
 
 } /* namespace view */

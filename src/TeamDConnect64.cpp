@@ -10,7 +10,7 @@
 using namespace view;
 
 int main() {
-	MainWindow window(325, 200, "Connect64 by Jones and Kight");
+	MainWindow window(325, 300, "Connect64 by Jones and Kight");
 
 	return (Fl::run());
 }

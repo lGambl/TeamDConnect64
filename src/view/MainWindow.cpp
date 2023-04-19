@@ -12,13 +12,28 @@ namespace view {
 MainWindow::MainWindow(int width, int height, const char *title) :
 		Fl_Window(width, height, title) {
 	this->begin();
-	this->inputDisplay = new Fl_Box(125, 50, 70, 30);
 
-	this->quitButton = new Fl_Button(125, 150, 70, 30, "Quit");
-	this->quitButton->callback(cb_quit, this);
+	int widthCentering = width / 2;
+	int heightCentering = height / 2;
 
-	this->playNewWindowButton = new Fl_Button(125, 100, 70, 30, "Play");
+	int itemWidth = 70;
+	int itemHeight = 30;
+
+	vector<string> difficulties = { "1", "2", "3", "4" };
+	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
+			heightCentering - 50, itemWidth, itemHeight, "Puzzle: ");
+
+	for (string current : difficulties) {
+		this->puzzleChoice->add(current.c_str());
+	}
+
+	this->playNewWindowButton = new Fl_Button(widthCentering - itemWidth / 2,
+			heightCentering, itemWidth, itemHeight, "Play");
 	this->playNewWindowButton->callback(cb_show, this);
+
+	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
+			heightCentering + 50, itemWidth, itemHeight, "Quit");
+	this->quitButton->callback(cb_quit, this);
 
 	this->end();
 	this->resizable(this);
@@ -29,7 +44,15 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::cb_show(Fl_Widget *o, void *data) {
-	GameWindow *window = new GameWindow(300, 300, "Game");
+
+	int difficulty = ((MainWindow*) data)->puzzleChoice->value();
+
+	if (difficulty < 0) {
+		fl_message("%s", "Please select a puzzle to play.");
+		return;
+	}
+
+	GameWindow *window = new GameWindow(400, 400, "Game", difficulty);
 	window->set_modal();
 	window->show();
 	while (window->shown())
