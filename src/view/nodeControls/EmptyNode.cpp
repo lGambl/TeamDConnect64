@@ -14,6 +14,10 @@ EmptyNode::EmptyNode(int x, int y, int width, int height, const char *tag,
 		Fl_Int_Input(x, y, width, height, tag) {
 	this->node = node;
 	this->maxNumber = maxNumber;
+
+	if (this->node->getNumber() >= 1) {
+		this->value(toString(this->node->getNumber(), "Node value is not a number").c_str());
+	}
 }
 
 EmptyNode::~EmptyNode() {
@@ -60,6 +64,11 @@ void EmptyNode::valueOutOfBounds() {
 	string max = toString(this->maxNumber, "Input must be a number.");
 	string error = "Number must be between 1 and " + max + ".";
 	throw std::invalid_argument(error);
+}
+
+void EmptyNode::reset() {
+	this->node->setNumber(-1);
+	this->value("");
 }
 
 } /* namespace view */

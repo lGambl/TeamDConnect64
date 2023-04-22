@@ -25,7 +25,7 @@ Board::~Board() {
 bool Board::loadBoard(int difficulty) {
 	BoardReader handler;
 	this->nodes = handler.readNodeFile(
-			"src/boards.txt",
+			"./src/boards.txt",
 			difficulty);
 
 	this->setUpNodes();

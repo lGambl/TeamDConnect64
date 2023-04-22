@@ -61,6 +61,14 @@ public:
 	 * @param e Integer representing the event fired.
 	 */
 	int handle(int e);
+
+	/**
+	 * Rests the node.
+	 *
+	 * @precondition none
+	 * @postcondition this->node->getNumber() = -1
+	 */
+	void reset();
 };
 
 } /* namespace view */
