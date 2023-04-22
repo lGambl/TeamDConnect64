@@ -1,12 +1,12 @@
 /*
- * FileHandler.h
+ * BoardReader.h
  *
  *  Created on: Apr 14, 2023
  *      Author: larry
  */
 
-#ifndef DATATIER_FILEHANDLER_H_
-#define DATATIER_FILEHANDLER_H_
+#ifndef DATATIER_BOARDREADER_H_
+#define DATATIER_BOARDREADER_H_
 
 #include <Node.h>
 using namespace model;
@@ -23,7 +23,7 @@ using namespace std;
 
 namespace datatier {
 
-class FileHandler {
+class BoardReader {
 private:
 	vector<int> splitByComma(const string& str);
 
@@ -31,12 +31,12 @@ public:
 	/**
 	 * Initializes a file handler
 	 */
-	FileHandler();
+	BoardReader();
 
 	/**
 	 * Deconstructs a file handler
 	 */
-	virtual ~FileHandler();
+	virtual ~BoardReader();
 
 	/**
 	 * Reads a file for nodes
@@ -52,4 +52,4 @@ public:
 
 } /* namespace datatier */
 
-#endif /* DATATIER_FILEHANDLER_H_ */
+#endif /* DATATIER_BOARDREADER_H_ */

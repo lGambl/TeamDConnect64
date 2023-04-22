@@ -5,19 +5,19 @@
  *      Author: larry
  */
 
-#include "FileHandler.h"
+#include <BoardReader.h>
 
 namespace datatier {
 
-FileHandler::FileHandler() {
+BoardReader::BoardReader() {
 
 }
 
-FileHandler::~FileHandler() {
+BoardReader::~BoardReader() {
 
 }
 
-vector<Node*> FileHandler::readNodeFile(const string fileName, int difficulty) {
+vector<Node*> BoardReader::readNodeFile(const string fileName, int difficulty) {
 	ifstream infile(fileName);
 	if (!infile) {
 		throw invalid_argument("\nFile " + fileName + " does not exist\n");
@@ -45,7 +45,7 @@ vector<Node*> FileHandler::readNodeFile(const string fileName, int difficulty) {
 	return nodes;
 }
 
-vector<int> FileHandler::splitByComma(const std::string& s) {
+vector<int> BoardReader::splitByComma(const std::string& s) {
     std::vector<int> values;
     std::istringstream ss(s);
     std::string token;
