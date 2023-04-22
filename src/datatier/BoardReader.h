@@ -23,6 +23,9 @@ using namespace std;
 
 namespace datatier {
 
+/**
+ * A board reader class responsible for reading boards from files
+ */
 class BoardReader {
 private:
 	vector<Node*> splitByComma(const string& str);
@@ -45,6 +48,9 @@ public:
 	 * @post none
 	 *
 	 * @param fileName
+	 *
+	 * @throw Illegal argument if file is not found
+	 *
 	 * @return vector of node pointer
 	 */
 	vector<Node*> readNodeFile(const string fileName, int difficulty);

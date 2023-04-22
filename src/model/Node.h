@@ -10,6 +10,9 @@
 
 namespace model {
 
+/**
+ * A node class that represents a node of a board
+ */
 class Node {
 private:
 	int number;

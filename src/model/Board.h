@@ -20,6 +20,9 @@ using namespace datatier;
 
 namespace model {
 
+/**
+ * A board class that represents a board of the game
+ */
 class Board {
 private:
 	Node *firstNode;
