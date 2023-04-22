@@ -15,7 +15,7 @@
 #include <algorithm>
 using namespace std;
 
-#include <FileHandler.h>
+#include <BoardReader.h>
 using namespace datatier;
 
 namespace model {
@@ -28,6 +28,8 @@ private:
 	uint numberColumns;
 	uint numberRows;
 	int nodeCount;
+
+	void setUpNodes();
 
 	bool checkIfNodeSolved(Node *node);
 public:
@@ -101,6 +103,8 @@ public:
 	const vector<Node*>& getNodes() const {
 		return nodes;
 	}
+
+	void setNodes(vector<Node*> nodes);
 };
 
 } /* namespace model */

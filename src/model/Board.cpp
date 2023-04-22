@@ -23,35 +23,12 @@ Board::~Board() {
 }
 
 bool Board::loadBoard(int difficulty) {
-	FileHandler handler;
+	BoardReader handler;
 	this->nodes = handler.readNodeFile(
-			"/home/steven/Documents/CS3202/TeamXConnect64/src/boards.txt", // FIXME: Find relative path
+			"src/boards.txt",
 			difficulty);
 
-	for (vector<Node*>::size_type i = 0; i < this->nodes.size(); i++) {
-		Node *current = this->nodes[i];
-
-		if (i % this->numberColumns != 7) {
-			current->setEast(this->nodes[i + 1]);
-		}
-
-		if (i % this->numberColumns != 0) {
-			current->setWest(this->nodes[i - 1]);
-		}
-
-		if (i > this->numberRows) {
-			current->setNorth(this->nodes[i - this->numberColumns]);
-		}
-
-		if (i < this->nodeCount - this->numberRows) {
-			current->setSouth(this->nodes[i + this->numberColumns]);
-		}
-
-		if (this->firstNode == nullptr
-				|| current->getNumber() < this->firstNode->getNumber()) {
-			this->firstNode = current;
-		}
-	}
+	this->setUpNodes();
 
 	return this->firstNode == nullptr;
 }
@@ -85,6 +62,38 @@ bool Board::checkIfNodeSolved(Node *node) {
 		return false;
 	}
 	return checkIfNodeSolved(connectedNode);
+}
+
+void Board::setNodes(vector<Node*> nodes){
+	this->nodes = nodes;
+	this->setUpNodes();
+}
+
+void Board::setUpNodes(){
+	for (vector<Node*>::size_type i = 0; i < this->nodes.size(); i++) {
+			Node *current = this->nodes[i];
+
+			if (i % this->numberColumns != 7) {
+				current->setEast(this->nodes[i + 1]);
+			}
+
+			if (i % this->numberColumns != 0) {
+				current->setWest(this->nodes[i - 1]);
+			}
+
+			if (i > this->numberRows) {
+				current->setNorth(this->nodes[i - this->numberColumns]);
+			}
+
+			if (i < this->nodeCount - this->numberRows) {
+				current->setSouth(this->nodes[i + this->numberColumns]);
+			}
+
+			if (this->firstNode == nullptr
+					|| current->getNumber() < this->firstNode->getNumber()) {
+				this->firstNode = current;
+			}
+		}
 }
 
 } /* namespace model */
