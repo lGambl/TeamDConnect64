@@ -28,13 +28,8 @@ void SaveHandler::saveGame(string &fileName, vector<Node*> nodes) {
 	ofstream file(fileName);
 	string toSave = "";
 
-	int counter = 0;
-	for (Node *node : nodes) {
-		if (counter < 63) {
-			toSave += to_string(node->getNumber()) + ",";
-		} else {
-			toSave += to_string(node->getNumber()) + ",";
-		}
+	for (vector<Node*>::size_type i = 0; i < nodes.size(); i++) {
+		toSave += to_string(nodes[i]->getNumber()) + "," + to_string(nodes[i]->getPreset()) + ",";
 	}
 	file << toSave;
 

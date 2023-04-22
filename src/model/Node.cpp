@@ -9,8 +9,9 @@
 
 namespace model {
 
-Node::Node(int number) {
+Node::Node(int number, bool preset) {
 	this->number = number;
+	this->preset = preset;
 
 	this->north = nullptr;
 	this->east = nullptr;

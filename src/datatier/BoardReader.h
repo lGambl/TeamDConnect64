@@ -25,7 +25,7 @@ namespace datatier {
 
 class BoardReader {
 private:
-	vector<int> splitByComma(const string& str);
+	vector<Node*> splitByComma(const string& str);
 
 public:
 	/**

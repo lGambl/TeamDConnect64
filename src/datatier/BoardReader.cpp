@@ -31,28 +31,36 @@ vector<Node*> BoardReader::readNodeFile(const string fileName, int difficulty) {
 
 		if (lineNumber++ == difficulty) {
 
-			stringstream ss;
-			vector<int> values = splitByComma(line);
-
-			for (int value : values) {
-				nodes.push_back(new Node(value));
-			}
-
-			return nodes;
+			return splitByComma(line);
 		}
 	}
 
 	return nodes;
 }
 
-vector<int> BoardReader::splitByComma(const std::string& s) {
-    std::vector<int> values;
-    std::istringstream ss(s);
-    std::string token;
+vector<Node*> BoardReader::splitByComma(const std::string& s) {
+    vector<int> values;
+    vector<bool> editables;
+    istringstream ss(s);
+    string token;
+
+    int count = 0;
     while (std::getline(ss, token, ',')) {
-        values.push_back(std::stoi(token));
+    	if (count % 2) {
+    		editables.push_back((bool)std::stoi(token));
+    	}
+    	else {
+    		values.push_back(std::stoi(token));
+    	}
+    	count++;
     }
-    return values;
+
+    vector<Node*> nodes;
+    for (vector<int>::size_type i = 0; i < values.size(); i++) {
+    	nodes.push_back(new Node(values[i], editables[i]));
+    }
+
+    return nodes;
 }
 
 } /* namespace datatier */

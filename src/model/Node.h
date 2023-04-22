@@ -13,6 +13,7 @@ namespace model {
 class Node {
 private:
 	int number;
+	bool preset;
 
 	Node *north;
 	Node *south;
@@ -28,7 +29,7 @@ public:
 	 *
 	 * @param number The number the node stores
 	 */
-	Node(int number);
+	Node(int number, bool preset);
 
 	/**
 	 * Deconstructor for the node.
@@ -57,6 +58,30 @@ public:
 	 */
 	void setNumber(int number) {
 		this->number = number;
+	}
+
+	/**
+	 * Getter for the preset stored in the node.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The preset stored in the node
+	 */
+	bool getPreset() {
+		return this->preset;
+	}
+
+	/**
+	 * Setter for the preset stored in the node.
+	 *
+	 * @precondition none
+	 * @postcondition this->preset = preset
+	 *
+	 * @param preset The new preset to store in the node
+	 */
+	void setPreset(bool preset) {
+		this->preset = preset;
 	}
 
 	/**
