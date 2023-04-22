@@ -58,6 +58,10 @@ private:
 	int closeButtonY;
 	int timerY;
 
+	int difficulty;
+
+	bool result;
+
 	Board* board;
 	vector<Node*> nodes;
 
@@ -84,6 +88,8 @@ public:
 	 */
 	~GameWindow();
 
+	bool nextGame();
+
 private:
 	static void cb_close(Fl_Widget*, void*);
 	static void cb_check(Fl_Widget*, void*);
@@ -94,6 +100,9 @@ private:
 	void saveGame();
 
 	Fl_Fontsize calculateSizes(int width, int height);
+	void buildDisplay(int width, int height);
+
+	void enableNextGame();
 };
 
 } /* namespace view */

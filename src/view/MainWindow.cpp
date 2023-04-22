@@ -20,9 +20,9 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	int itemWidth = 70;
 	int itemHeight = 30;
 
-	vector<string> difficulties = { "1", "2", "3", "4" };
+	vector<string> difficulties = { "1", "2", "3", "4", "5" };
 	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
-			heightCentering - 50, itemWidth, itemHeight, "Puzzle: ");
+			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
 
 	for (string current : difficulties) {
 		this->puzzleChoice->add(current.c_str());
@@ -35,12 +35,12 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 		this->saveChoice->add(save.c_str());
 	}
 
-	this->continueGameButton = new Fl_Button(widthCentering - itemWidth / 2,
-			heightCentering - 90, itemWidth, itemHeight, "Continue Game");
+	this->continueGameButton = new Fl_Button(widthCentering - (itemWidth + 50) / 2,
+			heightCentering - 80, itemWidth + 50, itemHeight, "Continue Game");
 	this->continueGameButton->callback(cb_showContinue, this);
 
 	this->playNewWindowButton = new Fl_Button(widthCentering - itemWidth / 2,
-			heightCentering, itemWidth, itemHeight, "Play");
+			heightCentering + 5, itemWidth, itemHeight, "Play");
 	this->playNewWindowButton->callback(cb_show, this);
 
 	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
@@ -70,6 +70,13 @@ void MainWindow::cb_show(Fl_Widget *o, void *data) {
 	while (window->shown()) {
 		Fl::wait();
 	}
+
+	if (window->nextGame() && !window->shown()) {
+		window = new GameWindow(400, 400, "Game", ++difficulty);
+		window->set_modal();
+		window->show();
+	}
+
 	((MainWindow*) data)->checkSaves();
 	((MainWindow*) data)->saveChoice->value(-1);
 }
@@ -85,6 +92,7 @@ void MainWindow::cb_quit_i() {
 void MainWindow::checkSaves() {
 	SaveHandler saver = SaveHandler();
 
+	this->saveChoice->clear();
 	this->saves = saver.getSaves();
 	for (string save : this->saves) {
 		this->saveChoice->add(save.c_str());
