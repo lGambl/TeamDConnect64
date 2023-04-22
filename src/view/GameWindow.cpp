@@ -36,23 +36,81 @@ GameWindow::GameWindow(int width, int height, const char *title, int difficulty)
 
 	this->buildNodeSquares(maxNumber, inputBoxFontSize);
 
-	string puzzleTitle = "Puzzle " + toString(difficulty + 1, "Invalid difficulty value");
+	this->puzzleTitle = "Puzzle "
+			+ toString(difficulty + 1, "Invalid difficulty value");
 	this->timer = new Fl_Output(this->middleX, this->timerY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "");
-	this->timer->value(puzzleTitle.c_str());
+	this->timer->value(this->puzzleTitle.c_str());
 	this->timer->align(FL_ALIGN_CENTER);
 
-	this->closeButton = new Fl_Button(this->middleX - this->otherObjectsWidth - 5, this->closeButtonY,
+	this->closeButton = new Fl_Button(
+			this->middleX - this->otherObjectsWidth - 5, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
 	this->closeButton->callback(cb_close, this);
 
 	this->checkButton = new Fl_Button(this->middleX, this->closeButtonY,
-				this->otherObjectsWidth, this->otherObjectsHeight, "Check");
+			this->otherObjectsWidth, this->otherObjectsHeight, "Check");
 	this->checkButton->callback(cb_check, this);
 
-	this->checkButton = new Fl_Button(this->middleX + this->otherObjectsWidth + 5, this->closeButtonY,
-					this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
-		this->checkButton->callback(cb_reset, this);
+	this->checkButton = new Fl_Button(
+			this->middleX + this->otherObjectsWidth + 5, this->closeButtonY,
+			this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
+	this->checkButton->callback(cb_reset, this);
+
+	this->end();
+	this->size_range(MINIMUM_SIZE, MINIMUM_SIZE);
+	this->resizable(this);
+}
+
+GameWindow::GameWindow(int width, int height, const char *title, string& save) :
+		Fl_Window(width, height, title) {
+	if (width < MINIMUM_SIZE) {
+		throw std::invalid_argument(
+				"Width must be greater than or equal to " + MINIMUM_SIZE);
+	}
+
+	if (height < MINIMUM_SIZE) {
+		throw std::invalid_argument(
+				"Height must be greater than or equal to " + MINIMUM_SIZE);
+	}
+
+	this->board = new Board();
+
+	SaveHandler saver = SaveHandler();
+
+	this->nodes = saver.loadSave(save);
+
+	this->board->setNodes(this->nodes);
+
+	this->numberRows = this->board->getNumberRows();
+	this->numberColumns = this->board->getNumberColumns();
+	int maxNumber = this->numberColumns * this->numberRows;
+
+	Fl_Fontsize inputBoxFontSize = calculateSizes(width, height);
+
+	this->begin();
+
+	this->buildNodeSquares(maxNumber, inputBoxFontSize);
+
+	this->puzzleTitle = save;
+	this->timer = new Fl_Output(this->middleX, this->timerY,
+			this->otherObjectsWidth, this->otherObjectsHeight, "");
+	this->timer->value(this->puzzleTitle.c_str());
+	this->timer->align(FL_ALIGN_CENTER);
+
+	this->closeButton = new Fl_Button(
+			this->middleX - this->otherObjectsWidth - 5, this->closeButtonY,
+			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
+	this->closeButton->callback(cb_close, this);
+
+	this->checkButton = new Fl_Button(this->middleX, this->closeButtonY,
+			this->otherObjectsWidth, this->otherObjectsHeight, "Check");
+	this->checkButton->callback(cb_check, this);
+
+	this->checkButton = new Fl_Button(
+			this->middleX + this->otherObjectsWidth + 5, this->closeButtonY,
+			this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
+	this->checkButton->callback(cb_reset, this);
 
 	this->end();
 	this->size_range(MINIMUM_SIZE, MINIMUM_SIZE);
@@ -113,10 +171,17 @@ void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 }
 
 GameWindow::~GameWindow() {
+	delete this->board;
 }
 
 void GameWindow::cb_close(Fl_Widget*, void *data) {
+	((GameWindow*) data)->saveGame();
 	((GameWindow*) data)->hide();
+}
+
+void GameWindow::saveGame() {
+	SaveHandler saver = SaveHandler();
+	saver.saveGame(this->puzzleTitle, this->nodes);
 }
 
 void GameWindow::cb_check(Fl_Widget*, void *data) {

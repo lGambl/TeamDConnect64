@@ -26,7 +26,8 @@ using namespace std;
 #include <Board.h>
 using namespace model;
 
-#include <FileHandler.h>
+#include <BoardReader.h>
+#include <SaveHandler.h>
 using namespace datatier;
 
 namespace view {
@@ -36,6 +37,8 @@ private:
 	Fl_Output *timer;
 	Fl_Button *closeButton;
 	Fl_Button *checkButton;
+
+	string puzzleTitle;
 
 	int numberRows;
 	int numberColumns;
@@ -74,6 +77,8 @@ public:
 	 */
 	GameWindow(int width, int height, const char *title, int difficulty);
 
+	GameWindow(int width, int height, const char *title, string& save);
+
 	/**
 	 * Deconstructor for the game window display.
 	 */
@@ -85,6 +90,8 @@ private:
 	static void cb_reset(Fl_Widget*, void*);
 
 	void buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize);
+
+	void saveGame();
 
 	Fl_Fontsize calculateSizes(int width, int height);
 };

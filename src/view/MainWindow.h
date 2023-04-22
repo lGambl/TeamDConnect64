@@ -12,7 +12,9 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
+
 #include <string>
+#include <vector>
 
 #include "GameWindow.h"
 using namespace std;
@@ -24,7 +26,10 @@ namespace view {
  */
 class MainWindow: public Fl_Window {
 private:
+	vector<string> saves;
 	Fl_Choice *puzzleChoice;
+	Fl_Choice *saveChoice;
+	Fl_Button *continueGameButton;
 	Fl_Button *quitButton;
 	Fl_Button *playNewWindowButton;
 
@@ -48,9 +53,12 @@ public:
 
 private:
 	static void cb_show(Fl_Widget*, void*);
+	static void cb_showContinue(Fl_Widget*, void*);
 
 	static void cb_quit(Fl_Widget*, void*);
 	inline void cb_quit_i();
+
+	void checkSaves();
 
 	void updateInputDisplay(const char *text);
 };
