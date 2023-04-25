@@ -37,13 +37,24 @@ void SaveHandler::saveGame(string &fileName, vector<Node*> nodes) {
 
 vector<string> SaveHandler::getSaves() {
 	vector<string> puzzleFiles;
-	    for (const auto& entry : filesystem::directory_iterator(".")) {
-	        string filename = entry.path().filename().string();
-	        if (filename.find("Puzzle") != string::npos) {
-	            puzzleFiles.push_back(filename);
-	        }
-	    }
-	    return puzzleFiles;
+
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir (".")) != NULL) {
+	  /* print all the files and directories within directory */
+	  while ((ent = readdir (dir)) != NULL) {
+		  string file = ent->d_name;
+		  if (file.find("Puzzle") != string::npos) {
+			  puzzleFiles.push_back(file);
+		  }
+	  }
+	  closedir (dir);
+	} else {
+	  /* could not open directory */
+	  perror ("");
+	}
+
+	return puzzleFiles;
 }
 
 } /* namespace datatier */
