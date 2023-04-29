@@ -51,12 +51,16 @@ GameWindow::GameWindow(int width, int height, const char *title, string& save) :
 
 	this->board->setNodes(this->nodes);
 
-	this->puzzleTitle = save;
+	this->puzzleTitle = save + ":";
 	this->buildDisplay(width, height);
 }
 
 void GameWindow::buildDisplay(int width, int height) {
 	this->result = false;
+	this->pause = false;
+
+	this->timerCount = 0;
+	Fl::add_timeout(1.0, cb_timer, this);
 
 	this->numberRows = this->board->getNumberRows();
 	this->numberColumns = this->board->getNumberColumns();
@@ -68,22 +72,22 @@ void GameWindow::buildDisplay(int width, int height) {
 
 	this->buildNodeSquares(maxNumber, inputBoxFontSize);
 
-	this->timer = new Fl_Output(this->middleX, this->timerY,
-			this->otherObjectsWidth, this->otherObjectsHeight, "");
-	this->timer->value(this->puzzleTitle.c_str());
-	this->timer->align(FL_ALIGN_CENTER);
+	this->timerOutput = new Fl_Output(this->middleX, this->timerY,
+			this->otherObjectsWidth, this->otherObjectsHeight, this->puzzleTitle.c_str());
+	this->timerOutput->value("00:00");
+	this->timerOutput->align(FL_ALIGN_CENTER);
 
 	this->closeButton = new Fl_Button(
-			this->middleX - this->otherObjectsWidth - 5, this->closeButtonY,
+			this->middleX - this->otherObjectsWidth * 2 - 5, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
 	this->closeButton->callback(cb_close, this);
 
-	this->checkButton = new Fl_Button(this->middleX, this->closeButtonY,
+	this->checkButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2 - 5, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Check");
 	this->checkButton->callback(cb_check, this);
 
 	this->checkButton = new Fl_Button(
-			this->middleX + this->otherObjectsWidth + 5, this->closeButtonY,
+			this->middleX + this->otherObjectsWidth * 2 + 5, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
 	this->checkButton->callback(cb_reset, this);
 
@@ -156,6 +160,45 @@ void GameWindow::enableNextGame() {
 	this->result = true;
 }
 
+void GameWindow::timer_update() {
+	this->timerCount++;
+
+	int minutes = this->timerCount / 60;
+	int seconds = this->timerCount % 60;
+
+	stringstream ss;
+	ss << setw(2) << setfill('0') << seconds;
+	string secondsString = ss.str();
+
+	stringstream ms;
+	ms << setw(2) << setfill('0') << minutes;
+	string minutesString = ms.str();
+
+	string timerOutputString = minutesString + ":" + secondsString;
+	this->timerOutput->value(timerOutputString.c_str());
+}
+
+void GameWindow::cb_timer(void* data) {
+	((GameWindow*) data)->timer_update();
+
+	if (!((GameWindow*) data)->pause) {
+		Fl::add_timeout(1.0, cb_timer, ((GameWindow*) data));
+	}
+}
+
+void GameWindow::cb_pause(Fl_Widget*, void *data) {
+	((GameWindow*) data)->pause = true;
+
+	Fl_Window* pauseDialog = new Fl_Window(300, 150,
+				"Puzzle Complete");
+
+	Fl_Button ok_button(50, 50, 100, 30, "Continue Puzzle");
+	ok_button.callback([](Fl_Widget *w, void *buttonData) {
+		((Fl_Window*) buttonData)->hide();
+	} , pauseDialog);
+
+}
+
 void GameWindow::cb_close(Fl_Widget*, void *data) {
 	((GameWindow*) data)->saveGame();
 	((GameWindow*) data)->hide();
@@ -166,43 +209,49 @@ void GameWindow::saveGame() {
 	saver.saveGame(this->puzzleTitle, this->nodes);
 }
 
+void GameWindow::displayCompleteDialog() {
+	Fl_Window *puzzleCompleteDialog = new Fl_Window(300, 150,
+			"Puzzle Complete");
+
+	bool result = false;
+
+	Fl_Button ok_button(50, 50, 100, 30, "Next Puzzle");
+	ok_button.callback([](Fl_Widget *w, void *buttonData) {
+		*((bool*) (buttonData)) = true;
+		((Fl_Window*) (w->parent()))->hide();
+	} , &result);
+
+	puzzleCompleteDialog->add(ok_button);
+
+	if (this->difficulty >= 3) {
+		ok_button.hide();
+	}
+
+	Fl_Button cancel_button(150, 50, 100, 30, "Stop Playing");
+	cancel_button.callback([](Fl_Widget *w, void *buttonData) {
+		*((bool*) (buttonData)) = false;
+		((Fl_Window*) (w->parent()))->hide();
+	} , &result);
+
+	puzzleCompleteDialog->add(cancel_button);
+	puzzleCompleteDialog->set_modal();
+	puzzleCompleteDialog->show();
+
+	while (puzzleCompleteDialog->shown()) {
+		Fl::wait();
+	}
+
+	this->hide();
+
+	if (result) {
+		this->enableNextGame();
+	}
+}
+
 void GameWindow::cb_check(Fl_Widget*, void *data) {
 	GameWindow* gameData = ((GameWindow*) data);
 	if (gameData->board->isSolved()) {
-		Fl_Window *puzzleCompleteDialog = new Fl_Window(300, 150, "Puzzle Complete");
-
-		bool result = false;
-
-		Fl_Button ok_button(50, 50, 100, 30, "Next Puzzle");
-		ok_button.callback([](Fl_Widget* w, void* buttonData) {
-			*((bool*) buttonData) = true;
-			((Fl_Window*) w->parent())->hide();
-		}, &result);
-
-		puzzleCompleteDialog->add(ok_button);
-
-		if (gameData->difficulty >= 3) {
-			ok_button.hide();
-		}
-
-		Fl_Button cancel_button(150, 50, 100, 30, "Stop Playing");
-		cancel_button.callback([](Fl_Widget* w, void* buttonData) {
-			*((bool*) buttonData) = false;
-			((Fl_Window*) w->parent())->hide();
-		}, &result);
-
-		puzzleCompleteDialog->add(cancel_button);
-
-		puzzleCompleteDialog->set_modal();
-		puzzleCompleteDialog->show();
-		while (puzzleCompleteDialog->shown()) {
-			Fl::wait();
-		}
-
-		gameData->hide();
-		if (result) {
-			gameData->enableNextGame();
-		}
+		((GameWindow*) data)->displayCompleteDialog();
 	}
 	else {
 		fl_message("%s", "Puzzle incomplete!");

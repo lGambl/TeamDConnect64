@@ -19,6 +19,8 @@
 #include "ExistingNode.h"
 
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include <vector>
 using namespace std;
 
@@ -34,7 +36,7 @@ namespace view {
 
 class GameWindow: public Fl_Window {
 private:
-	Fl_Output *timer;
+	Fl_Output *timerOutput;
 	Fl_Button *closeButton;
 	Fl_Button *checkButton;
 
@@ -59,8 +61,10 @@ private:
 	int timerY;
 
 	int difficulty;
+	int timerCount;
 
 	bool result;
+	bool pause;
 
 	Board* board;
 	vector<Node*> nodes;
@@ -91,6 +95,8 @@ public:
 	bool nextGame();
 
 private:
+	static void cb_timer(void* data);
+	static void cb_pause(Fl_Widget*, void*);
 	static void cb_close(Fl_Widget*, void*);
 	static void cb_check(Fl_Widget*, void*);
 	static void cb_reset(Fl_Widget*, void*);
@@ -103,6 +109,10 @@ private:
 	void buildDisplay(int width, int height);
 
 	void enableNextGame();
+	void timer_update();
+
+	void displayCompleteDialog();
+	void displayPauseDialog();
 };
 
 } /* namespace view */
