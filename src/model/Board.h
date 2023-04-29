@@ -81,7 +81,7 @@ public:
 	 * @return The number of columns on the board
 	 */
 	int getNumberColumns() const {
-		return numberColumns;
+		return this->numberColumns;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public:
 	 * @return The number of rows on the board
 	 */
 	int getNumberRows() const {
-		return numberRows;
+		return this->numberRows;
 	}
 
 	/**
@@ -105,7 +105,7 @@ public:
 	 * @return The nodes on the board
 	 */
 	const vector<Node*>& getNodes() const {
-		return nodes;
+		return this->nodes;
 	}
 
 	/**
@@ -114,7 +114,7 @@ public:
 	 * @return timer
 	 */
 	int getTimer() const {
-		return timer;
+		return this->timer;
 	}
 
 	/**
@@ -126,7 +126,7 @@ public:
 	 * @return
 	 */
 	void setTimer(int timer) {
-		timer = this->timer;
+		this->timer = timer;
 	}
 
 	void setNodes(vector<Node*> nodes);

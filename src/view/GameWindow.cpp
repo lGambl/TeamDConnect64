@@ -26,6 +26,7 @@ GameWindow::GameWindow(int width, int height, const char *title, int difficulty)
 	this->difficulty = difficulty;
 
 	this->nodes = this->board->getNodes();
+	this->timerCount = 0;
 
 	this->puzzleTitle = "Puzzle " + toString(difficulty + 1, "Difficuly must be a number.");
 	this->buildDisplay(width, height);
@@ -46,15 +47,18 @@ GameWindow::GameWindow(int width, int height, const char *title, string& save) :
 	SaveHandler saver = SaveHandler();
 
 	this->board = saver.loadSave(save);
+	this->nodes = this->board->getNodes();
+	this->timerCount = this->board->getTimer();
 
 	this->puzzleTitle = save;
 	this->buildDisplay(width, height);
+
+	this->timer_update();
 }
 
 void GameWindow::buildDisplay(int width, int height) {
 	this->result = false;
 
-	this->timerCount = 0;
 	Fl::add_timeout(1.0, cb_timer, this);
 
 	this->numberRows = this->board->getNumberRows();
@@ -160,7 +164,6 @@ void GameWindow::enableNextGame() {
 }
 
 void GameWindow::timer_update() {
-	this->timerCount++;
 	this->board->setTimer(timerCount);
 
 	int minutes = this->timerCount / 60;
@@ -179,6 +182,7 @@ void GameWindow::timer_update() {
 }
 
 void GameWindow::cb_timer(void* data) {
+	((GameWindow*) data)->timerCount++;
 	((GameWindow*) data)->timer_update();
 
 	if (!((GameWindow*) data)->pause) {
@@ -187,10 +191,10 @@ void GameWindow::cb_timer(void* data) {
 }
 
 void GameWindow::cb_pause(Fl_Widget*, void *data) {
-	Fl_Window* pauseDialog = new Fl_Window(300, 150,
+	Fl_Window* pauseDialog = new Fl_Window(300, 250,
 				"Puzzle Paused");
 
-	Fl_Button ok_button(75, 50, 150, 30, "Continue Puzzle");
+	Fl_Button ok_button(75, 95, 150, 30, "Continue Puzzle");
 	ok_button.callback([](Fl_Widget *w, void *buttonData) {
 		((Fl_Window*) buttonData)->hide();
 	} , pauseDialog);

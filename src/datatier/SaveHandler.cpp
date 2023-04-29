@@ -67,13 +67,11 @@ Board* SaveHandler::readSaveFile(string &fileName) {
 	vector<Node*> nodes;
 	string line;
 	Board *board = new Board();
-	int lineNumber = 0;
-	int time = 0;
 	getline(infile, line);
 
 	try {
-		getline(infile, line);
 		int time = stoi(line);
+		getline(infile, line);
 		BoardReader reader = BoardReader();
 		board->setNodes(reader.splitByComma(line));
 		board->setTimer(time);

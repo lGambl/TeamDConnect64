@@ -94,7 +94,7 @@ void MainWindow::cb_quit_i() {
 void MainWindow::checkSaves() {
 	SaveHandler saver = SaveHandler();
 
-	this->saveChoice->clear();
+//	this->saveChoice->clear();
 	this->saves = saver.getSaves();
 	for (string save : this->saves) {
 		this->saveChoice->add(save.c_str());
