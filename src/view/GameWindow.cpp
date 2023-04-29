@@ -73,16 +73,20 @@ void GameWindow::buildDisplay(int width, int height) {
 	this->timerOutput->align(FL_ALIGN_CENTER);
 
 	this->closeButton = new Fl_Button(
-			this->middleX - this->otherObjectsWidth * 2 - 5, this->closeButtonY,
+			this->middleX - this->otherObjectsWidth * 2 - 5, this->bottomButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
 	this->closeButton->callback(cb_close, this);
 
-	this->checkButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2 - 15, this->closeButtonY,
+	this->checkButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2 - 15, this->bottomButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Check");
 	this->checkButton->callback(cb_check, this);
 
+	this->pauseButton = new Fl_Button(this->middleX + this->otherObjectsWidth / 2 + 15, this->bottomButtonY,
+				this->otherObjectsWidth, this->otherObjectsHeight, "Pause");
+		this->pauseButton->callback(cb_pause, this);
+
 	this->resetButton = new Fl_Button(
-			this->middleX + this->otherObjectsWidth * 2 + 5, this->closeButtonY,
+			this->middleX + this->otherObjectsWidth * 2 + 5, this->bottomButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
 	this->resetButton->callback(cb_reset, this);
 
@@ -108,7 +112,7 @@ Fl_Fontsize GameWindow::calculateSizes(int width, int height) { // FIXME: Doesn'
 
 	this->middleX = width / 2 - (otherObjectsWidth / 2);
 
-	this->closeButtonY = height - heightCentering
+	this->bottomButtonY = height - heightCentering
 			- (otherObjectsHeight / (this->numberColumns / 2)) + 5;
 
 	this->timerY = heightCentering
@@ -176,23 +180,31 @@ void GameWindow::timer_update() {
 
 void GameWindow::cb_timer(void* data) {
 	((GameWindow*) data)->timer_update();
-	Fl::add_timeout(1.0, cb_timer, ((GameWindow*) data));
+
+	if (!((GameWindow*) data)->pause) {
+		Fl::add_timeout(1.0, cb_timer, ((GameWindow*) data));
+	}
 }
 
 void GameWindow::cb_pause(Fl_Widget*, void *data) {
 	Fl_Window* pauseDialog = new Fl_Window(300, 150,
-				"Puzzle Complete");
+				"Puzzle Paused");
 
-	Fl_Button ok_button(50, 50, 100, 30, "Continue Puzzle");
+	Fl_Button ok_button(75, 50, 150, 30, "Continue Puzzle");
 	ok_button.callback([](Fl_Widget *w, void *buttonData) {
 		((Fl_Window*) buttonData)->hide();
 	} , pauseDialog);
 
+	pauseDialog->set_modal();
 	pauseDialog->show();
 
 	while (pauseDialog->shown()) {
+		((GameWindow*) data)->pause = true;
 		Fl::wait();
 	}
+
+	((GameWindow*) data)->pause = false;
+	Fl::add_timeout(1.0, cb_timer, ((GameWindow*) data));
 }
 
 void GameWindow::cb_close(Fl_Widget*, void *data) {

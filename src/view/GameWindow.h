@@ -59,13 +59,14 @@ private:
 	int heightCentering;
 
 	int middleX;
-	int closeButtonY;
+	int bottomButtonY;
 	int timerY;
 
 	int difficulty;
 	int timerCount;
 
 	bool result;
+	bool pause;
 
 	Board* board;
 	vector<Node*> nodes;
