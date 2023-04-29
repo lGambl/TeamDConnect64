@@ -14,6 +14,7 @@ Board::Board() {
 
 	this->numberColumns = 8;
 	this->numberRows = 8;
+	this->timer = 0;
 
 	this->nodeCount = this->numberColumns * this->numberRows;
 }

@@ -9,6 +9,7 @@
 #define DATATIER_SAVEHANDLER_H_
 
 #include <Node.h>
+#include <Board.h>
 using namespace model;
 
 #include <vector>
@@ -27,6 +28,8 @@ namespace datatier {
  */
 class SaveHandler {
 
+private:
+	Board* readSaveFile(string& fileName) ;
 public:
 	/**
 	 * Initializes a save handler
@@ -45,7 +48,7 @@ public:
 	 *
 	 * @return nodes of the board
 	 */
-	vector<Node*> loadSave(string &fileName);
+	Board* loadSave(string &fileName);
 
 	/**
 	 * Save a game to a give file
@@ -53,7 +56,7 @@ public:
 	 * @param fileName
 	 * @param nodes
 	 */
-	void saveGame(string &fileName, vector<Node*> nodes);
+	void saveGame(string &fileName, vector<Node*> nodes, int time);
 
 	/**
 	 * Get saves that are in the main directory of the project

@@ -31,6 +31,7 @@ private:
 	uint numberColumns;
 	uint numberRows;
 	int nodeCount;
+	int timer;
 
 	void setUpNodes();
 
@@ -107,8 +108,30 @@ public:
 		return nodes;
 	}
 
+	/**
+	 * Gets the timer
+	 *
+	 * @return timer
+	 */
+	int getTimer() const {
+		return timer;
+	}
+
+	/**
+	 * Sets the timer
+	 *
+	 *@pre none
+	 *@post this->timer == timer
+	 *
+	 * @return
+	 */
+	void setTimer(int timer) {
+		timer = this->timer;
+	}
+
 	void setNodes(vector<Node*> nodes);
 };
+
 
 } /* namespace model */
 

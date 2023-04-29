@@ -27,9 +27,6 @@ namespace datatier {
  * A board reader class responsible for reading boards from files
  */
 class BoardReader {
-private:
-	vector<Node*> splitByComma(const string& str);
-
 public:
 	/**
 	 * Initializes a file handler
@@ -54,6 +51,14 @@ public:
 	 * @return vector of node pointer
 	 */
 	vector<Node*> readNodeFile(const string fileName, int difficulty);
+
+	/**
+	 * Split given string into nodes if possible
+	 *
+	 * @param str the string
+	 * @return a vector of nodes
+	 */
+	vector<Node*> splitByComma(const string& str);
 };
 
 } /* namespace datatier */
