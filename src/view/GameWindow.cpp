@@ -43,13 +43,9 @@ GameWindow::GameWindow(int width, int height, const char *title, string& save) :
 				"Height must be greater than or equal to " + MINIMUM_SIZE);
 	}
 
-	this->board = new Board();
-
 	SaveHandler saver = SaveHandler();
 
-	this->nodes = saver.loadSave(save);
-
-	this->board->setNodes(this->nodes);
+	this->board = saver.loadSave(save);
 
 	this->puzzleTitle = save;
 	this->buildDisplay(width, height);
@@ -161,6 +157,7 @@ void GameWindow::enableNextGame() {
 
 void GameWindow::timer_update() {
 	this->timerCount++;
+	this->board->setTimer(timerCount);
 
 	int minutes = this->timerCount / 60;
 	int seconds = this->timerCount % 60;
@@ -205,7 +202,7 @@ void GameWindow::cb_close(Fl_Widget*, void *data) {
 
 void GameWindow::saveGame() {
 	SaveHandler saver = SaveHandler();
-	saver.saveGame(this->puzzleTitle, this->nodes);
+	saver.saveGame(this->puzzleTitle, this->nodes, this->timerCount);
 }
 
 void GameWindow::displayCompleteDialog() {
@@ -259,6 +256,10 @@ void GameWindow::cb_check(Fl_Widget*, void *data) {
 
 void GameWindow::cb_reset(Fl_Widget*, void *data) {
 	vector<Fl_Widget*> widgets = ((GameWindow*) data)->gameBoard;
+
+	((GameWindow*) data)->timerCount = 0;
+	((GameWindow*) data)->board->setTimer(0);
+
 
 	for (Fl_Widget* current : widgets) {
 		if (EmptyNode* newValue = dynamic_cast<EmptyNode*>(current)) {
