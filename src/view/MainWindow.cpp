@@ -64,7 +64,9 @@ void MainWindow::cb_show(Fl_Widget *o, void *data) {
 		return;
 	}
 
-	GameWindow *window = new GameWindow(400, 400, "Game", difficulty);
+	string title = "Puzzle " + toString(difficulty + 1, "Difficuly must be a number.");
+
+	GameWindow *window = new GameWindow(400, 400, title.c_str(), difficulty);
 	window->set_modal();
 	window->show();
 	while (window->shown()) {
@@ -110,7 +112,7 @@ void MainWindow::cb_showContinue(Fl_Widget*, void *data) {
 
 	string puzzle = ((MainWindow*) data)->saves[choice];
 
-	GameWindow *window = new GameWindow(400, 400, "Game", puzzle);
+	GameWindow *window = new GameWindow(400, 400, puzzle.c_str(), puzzle);
 	window->set_modal();
 	window->show();
 	while (window->shown())

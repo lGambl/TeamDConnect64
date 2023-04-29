@@ -51,13 +51,12 @@ GameWindow::GameWindow(int width, int height, const char *title, string& save) :
 
 	this->board->setNodes(this->nodes);
 
-	this->puzzleTitle = save + ":";
+	this->puzzleTitle = save;
 	this->buildDisplay(width, height);
 }
 
 void GameWindow::buildDisplay(int width, int height) {
 	this->result = false;
-	this->pause = false;
 
 	this->timerCount = 0;
 	Fl::add_timeout(1.0, cb_timer, this);
@@ -73,7 +72,7 @@ void GameWindow::buildDisplay(int width, int height) {
 	this->buildNodeSquares(maxNumber, inputBoxFontSize);
 
 	this->timerOutput = new Fl_Output(this->middleX, this->timerY,
-			this->otherObjectsWidth, this->otherObjectsHeight, this->puzzleTitle.c_str());
+			this->otherObjectsWidth, this->otherObjectsHeight, "");
 	this->timerOutput->value("00:00");
 	this->timerOutput->align(FL_ALIGN_CENTER);
 
@@ -82,14 +81,14 @@ void GameWindow::buildDisplay(int width, int height) {
 			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
 	this->closeButton->callback(cb_close, this);
 
-	this->checkButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2 - 5, this->closeButtonY,
+	this->checkButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2 - 15, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Check");
 	this->checkButton->callback(cb_check, this);
 
-	this->checkButton = new Fl_Button(
+	this->resetButton = new Fl_Button(
 			this->middleX + this->otherObjectsWidth * 2 + 5, this->closeButtonY,
 			this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
-	this->checkButton->callback(cb_reset, this);
+	this->resetButton->callback(cb_reset, this);
 
 	this->end();
 	this->size_range(MINIMUM_SIZE, MINIMUM_SIZE);
@@ -180,15 +179,10 @@ void GameWindow::timer_update() {
 
 void GameWindow::cb_timer(void* data) {
 	((GameWindow*) data)->timer_update();
-
-	if (!((GameWindow*) data)->pause) {
-		Fl::add_timeout(1.0, cb_timer, ((GameWindow*) data));
-	}
+	Fl::add_timeout(1.0, cb_timer, ((GameWindow*) data));
 }
 
 void GameWindow::cb_pause(Fl_Widget*, void *data) {
-	((GameWindow*) data)->pause = true;
-
 	Fl_Window* pauseDialog = new Fl_Window(300, 150,
 				"Puzzle Complete");
 
@@ -197,6 +191,11 @@ void GameWindow::cb_pause(Fl_Widget*, void *data) {
 		((Fl_Window*) buttonData)->hide();
 	} , pauseDialog);
 
+	pauseDialog->show();
+
+	while (pauseDialog->shown()) {
+		Fl::wait();
+	}
 }
 
 void GameWindow::cb_close(Fl_Widget*, void *data) {

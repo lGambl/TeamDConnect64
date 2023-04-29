@@ -39,6 +39,8 @@ private:
 	Fl_Output *timerOutput;
 	Fl_Button *closeButton;
 	Fl_Button *checkButton;
+	Fl_Button *resetButton;
+	Fl_Button *pauseButton;
 
 	string puzzleTitle;
 
@@ -64,7 +66,6 @@ private:
 	int timerCount;
 
 	bool result;
-	bool pause;
 
 	Board* board;
 	vector<Node*> nodes;
