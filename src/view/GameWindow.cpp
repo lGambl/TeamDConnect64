@@ -134,14 +134,14 @@ void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 			int inputX = j * this->inputBoxWidth + this->widthCentering;
 			int inputY = i * this->inputBoxHeight + this->heightCentering;
 
-			Node *newNode = this->nodes[index++];
+			BoardNode *newNode = this->nodes[index++];
 
 			Fl_Widget *newControl;
 			if (newNode->getPreset()) {
-				newControl = new ExistingNode(inputX, inputY,
+				newControl = new ExistingBoardNode(inputX, inputY,
 						this->inputBoxWidth, this->inputBoxHeight, newNode);
 			} else {
-				newControl = new EmptyNode(inputX, inputY, this->inputBoxWidth,
+				newControl = new EmptyBoardNode(inputX, inputY, this->inputBoxWidth,
 						this->inputBoxHeight, "", maxNumber, newNode);
 			}
 
@@ -278,7 +278,7 @@ void GameWindow::cb_reset(Fl_Widget*, void *data) {
 
 
 	for (Fl_Widget* current : widgets) {
-		if (EmptyNode* newValue = dynamic_cast<EmptyNode*>(current)) {
+		if (EmptyBoardNode* newValue = dynamic_cast<EmptyBoardNode*>(current)) {
 			newValue->reset();
 		}
 	}

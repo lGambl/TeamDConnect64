@@ -5,11 +5,11 @@
  *      Author: Steven Kight
  */
 
-#include "Node.h"
+#include <BoardNode.h>
 
 namespace model {
 
-Node::Node(int number, bool preset) {
+BoardNode::BoardNode(int number, bool preset) {
 	this->number = number;
 	this->preset = preset;
 
@@ -19,7 +19,7 @@ Node::Node(int number, bool preset) {
 	this->west = nullptr;
 }
 
-Node::~Node() {
+BoardNode::~BoardNode() {
 	this->number = 0;
 	if (this->north != nullptr) {
 		delete this->north;
@@ -35,7 +35,7 @@ Node::~Node() {
 	}
 }
 
-bool Node::isConnected() {
+bool BoardNode::isConnected() {
 	bool hasLowerNode = false;
 	bool hasUpperNode = false;
 
@@ -94,7 +94,7 @@ bool Node::isConnected() {
 
 }
 
-Node* Node::getConnectedUpperNode() {
+BoardNode* BoardNode::getConnectedUpperNode() {
 //	if (this->isConnected()) {
 		if (this->north != nullptr && this->north->getNumber() == this->number + 1) {
 			return this->north;

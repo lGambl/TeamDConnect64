@@ -5,11 +5,11 @@
  *      Author: Steven Kight
  */
 
-#include <ExistingNode.h>
+#include <ExistingBoardNode.h>
 
 namespace view {
 
-ExistingNode::ExistingNode(int x, int y, int width, int height, Node *node) :
+ExistingBoardNode::ExistingBoardNode(int x, int y, int width, int height, BoardNode *node) :
 		Fl_Output(x, y, width, height) {
 	this->node = node;
 
@@ -22,7 +22,7 @@ ExistingNode::ExistingNode(int x, int y, int width, int height, Node *node) :
 	}
 }
 
-ExistingNode::~ExistingNode() {
+ExistingBoardNode::~ExistingBoardNode() {
 }
 
 } /* namespace view */

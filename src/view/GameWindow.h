@@ -15,8 +15,8 @@
 #include <FL/Fl_Output.H>
 #include <FL/Enumerations.H>
 
-#include "EmptyNode.h"
-#include "ExistingNode.h"
+#include "EmptyBoardNode.h"
+#include "ExistingBoardNode.h"
 
 #include <iostream>
 #include <sstream>
@@ -24,7 +24,7 @@
 #include <vector>
 using namespace std;
 
-#include <Node.h>
+#include <BoardNode.h>
 #include <Board.h>
 using namespace model;
 
@@ -69,7 +69,7 @@ private:
 	bool pause;
 
 	Board* board;
-	vector<Node*> nodes;
+	vector<BoardNode*> nodes;
 
 	vector<Fl_Widget*> gameBoard;
 	static const int MINIMUM_SIZE = 300;

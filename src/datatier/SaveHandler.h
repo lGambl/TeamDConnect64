@@ -8,7 +8,7 @@
 #ifndef DATATIER_SAVEHANDLER_H_
 #define DATATIER_SAVEHANDLER_H_
 
-#include <Node.h>
+#include <BoardNode.h>
 #include <Board.h>
 using namespace model;
 
@@ -56,7 +56,7 @@ public:
 	 * @param fileName
 	 * @param nodes
 	 */
-	void saveGame(string &fileName, vector<Node*> nodes, int time);
+	void saveGame(string &fileName, vector<BoardNode*> nodes, int time);
 
 	/**
 	 * Get saves that are in the main directory of the project

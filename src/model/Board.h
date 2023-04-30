@@ -8,7 +8,7 @@
 #ifndef MODEL_BOARD_H_
 #define MODEL_BOARD_H_
 
-#include <Node.h>
+#include <BoardNode.h>
 
 #include <vector>
 #include <iostream>
@@ -25,8 +25,8 @@ namespace model {
  */
 class Board {
 private:
-	Node *firstNode;
-	vector<Node*> nodes;
+	BoardNode *firstNode;
+	vector<BoardNode*> nodes;
 
 	uint numberColumns;
 	uint numberRows;
@@ -35,7 +35,7 @@ private:
 
 	void setUpNodes();
 
-	bool checkIfNodeSolved(Node *node);
+	bool checkIfNodeSolved(BoardNode *node);
 public:
 	const int MIN_VALUE = 1;
 
@@ -104,7 +104,7 @@ public:
 	 *
 	 * @return The nodes on the board
 	 */
-	const vector<Node*>& getNodes() const {
+	const vector<BoardNode*>& getNodes() const {
 		return this->nodes;
 	}
 
@@ -129,7 +129,7 @@ public:
 		this->timer = timer;
 	}
 
-	void setNodes(vector<Node*> nodes);
+	void setNodes(vector<BoardNode*> nodes);
 };
 
 

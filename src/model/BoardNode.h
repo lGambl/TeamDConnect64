@@ -5,23 +5,23 @@
  *      Author: Steven Kight
  */
 
-#ifndef MODEL_NODE_H_
-#define MODEL_NODE_H_
+#ifndef MODEL_BOARDNODE_H_
+#define MODEL_BOARDNODE_H_
 
 namespace model {
 
 /**
  * A node class that represents a node of a board
  */
-class Node {
+class BoardNode {
 private:
 	int number;
 	bool preset;
 
-	Node *north;
-	Node *south;
-	Node *east;
-	Node *west;
+	BoardNode *north;
+	BoardNode *south;
+	BoardNode *east;
+	BoardNode *west;
 
 public:
 	/**
@@ -32,12 +32,12 @@ public:
 	 *
 	 * @param number The number the node stores
 	 */
-	Node(int number, bool preset);
+	BoardNode(int number, bool preset);
 
 	/**
 	 * Deconstructor for the node.
 	 */
-	virtual ~Node();
+	virtual ~BoardNode();
 
 	/**
 	 * Getter for the number stored in the node.
@@ -95,7 +95,7 @@ public:
 	 *
 	 * @return The pointer to the node to the east
 	 */
-	Node*& getEast() {
+	BoardNode*& getEast() {
 		return this->east;
 	}
 
@@ -107,7 +107,7 @@ public:
 	 *
 	 * @param west The new east node pointer
 	 */
-	void setEast(Node *&east) {
+	void setEast(BoardNode *&east) {
 		this->east = east;
 	}
 
@@ -119,7 +119,7 @@ public:
 	 *
 	 * @return The pointer to the node to the north
 	 */
-	Node*& getNorth() {
+	BoardNode*& getNorth() {
 		return this->north;
 	}
 
@@ -131,7 +131,7 @@ public:
 	 *
 	 * @param west The new north node pointer
 	 */
-	void setNorth(Node *&north) {
+	void setNorth(BoardNode *&north) {
 		this->north = north;
 	}
 
@@ -143,7 +143,7 @@ public:
 	 *
 	 * @return The pointer to the node to the south
 	 */
-	Node*& getSouth() {
+	BoardNode*& getSouth() {
 		return this->south;
 	}
 
@@ -155,7 +155,7 @@ public:
 	 *
 	 * @param west The new south node pointer
 	 */
-	void setSouth(Node *&south) {
+	void setSouth(BoardNode *&south) {
 		this->south = south;
 	}
 
@@ -167,7 +167,7 @@ public:
 	 *
 	 * @return The pointer to the node to the west
 	 */
-	Node*& getWest() {
+	BoardNode*& getWest() {
 		return this->west;
 	}
 
@@ -179,7 +179,7 @@ public:
 	 *
 	 * @param west The new west node pointer
 	 */
-	void setWest(Node *&west) {
+	void setWest(BoardNode *&west) {
 		this->west = west;
 	}
 
@@ -201,9 +201,9 @@ public:
 	 *
 	 * @return the connected node if there is one. If not return nullptr.
 	 */
-	Node* getConnectedUpperNode();
+	BoardNode* getConnectedUpperNode();
 };
 
 } /* namespace model */
 
-#endif /* MODEL_NODE_H_ */
+#endif /* MODEL_BOARDNODE_H_ */

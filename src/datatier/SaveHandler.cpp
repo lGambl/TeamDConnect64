@@ -23,12 +23,12 @@ Board* SaveHandler::loadSave(string &fileName) {
 	return board;
 }
 
-void SaveHandler::saveGame(string &fileName, vector<Node*> nodes, int time) {
+void SaveHandler::saveGame(string &fileName, vector<BoardNode*> nodes, int time) {
 	ofstream file(fileName);
 	string toSave = "";
 
 	toSave += to_string(time) + "\n";
-	for (vector<Node*>::size_type i = 0; i < nodes.size(); i++) {
+	for (vector<BoardNode*>::size_type i = 0; i < nodes.size(); i++) {
 		toSave += to_string(nodes[i]->getNumber()) + ","
 				+ to_string(nodes[i]->getPreset()) + ",";
 	}
@@ -64,7 +64,7 @@ Board* SaveHandler::readSaveFile(string &fileName) {
 		throw invalid_argument("\nFile " + fileName + " does not exist\n");
 	}
 
-	vector<Node*> nodes;
+	vector<BoardNode*> nodes;
 	string line;
 	Board *board = new Board();
 	getline(infile, line);

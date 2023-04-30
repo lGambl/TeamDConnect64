@@ -5,8 +5,8 @@
  *      Author: Steven Kight
  */
 
-#ifndef VIEW_EMPTYNODE_H_
-#define VIEW_EMPTYNODE_H_
+#ifndef VIEW_EMPTYBOARDNODE_H_
+#define VIEW_EMPTYBOARDNODE_H_
 
 #include <FL/Fl_Int_Input.H>
 #include <FL/fl_ask.H>
@@ -16,7 +16,7 @@
 #include <string>
 using namespace std;
 
-#include "Node.h"
+#include <BoardNode.h>
 using namespace model;
 
 #include "Utils.h"
@@ -25,9 +25,9 @@ using namespace model;
 
 namespace view {
 
-class EmptyNode: public Fl_Int_Input {
+class EmptyBoardNode: public Fl_Int_Input {
 private:
-	Node *node;
+	BoardNode *node;
 	int maxNumber;
 
 	void valueOutOfBounds();
@@ -45,12 +45,12 @@ public:
 	 * @param tag The tag for the input box.
 	 * @param node The node the control refers to.
 	 */
-	EmptyNode(int x, int y, int width, int height, const char *tag, int maxNumber, Node *node);
+	EmptyBoardNode(int x, int y, int width, int height, const char *tag, int maxNumber, BoardNode *node);
 
 	/**
 	 * Deconstructor for the existing node control.
 	 */
-	virtual ~EmptyNode();
+	virtual ~EmptyBoardNode();
 
 	/**
 	 * Handles events fired from input box.

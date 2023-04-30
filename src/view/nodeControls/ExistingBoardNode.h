@@ -5,22 +5,22 @@
  *      Author: Steven Kight
  */
 
-#ifndef VIEW_EXISTINGNODE_H_
-#define VIEW_EXISTINGNODE_H_
+#ifndef VIEW_EXISTINGBOARDNODE_H_
+#define VIEW_EXISTINGBOARDNODE_H_
 
+#include <BoardNode.h>
 #include <FL/Fl_Output.H>
 #include <FL/fl_ask.H>
 
-#include "Node.h"
 using namespace model;
 
 #include "Utils.h"
 
 namespace view {
 
-class ExistingNode: public Fl_Output {
+class ExistingBoardNode: public Fl_Output {
 private:
-	Node *node;
+	BoardNode *node;
 public:
 	/**
 	 * Initializes an existing node control.
@@ -34,12 +34,12 @@ public:
 	 * @param height The height of the window.
 	 * @param node The node the control refers to.
 	 */
-	ExistingNode(int x, int y, int width, int height, Node *node);
+	ExistingBoardNode(int x, int y, int width, int height, BoardNode *node);
 
 	/**
 	 * Deconstructor for the existing node control.
 	 */
-	virtual ~ExistingNode();
+	virtual ~ExistingBoardNode();
 };
 
 } /* namespace view */

@@ -5,12 +5,12 @@
  *      Author: Steven Kight
  */
 
-#include <EmptyNode.h>
+#include <EmptyBoardNode.h>
 
 namespace view {
 
-EmptyNode::EmptyNode(int x, int y, int width, int height, const char *tag,
-		int maxNumber, Node *node) :
+EmptyBoardNode::EmptyBoardNode(int x, int y, int width, int height, const char *tag,
+		int maxNumber, BoardNode *node) :
 		Fl_Int_Input(x, y, width, height, tag) {
 	this->node = node;
 	this->maxNumber = maxNumber;
@@ -20,10 +20,10 @@ EmptyNode::EmptyNode(int x, int y, int width, int height, const char *tag,
 	}
 }
 
-EmptyNode::~EmptyNode() {
+EmptyBoardNode::~EmptyBoardNode() {
 }
 
-int EmptyNode::handle(int e) {
+int EmptyBoardNode::handle(int e) {
 	int ret = Fl_Input::handle(e); // pass events to subclass first
 	switch (e) {
 	case FL_KEYBOARD:
@@ -54,7 +54,7 @@ int EmptyNode::handle(int e) {
 	return ret; // pass back subclass's handle return code
 }
 
-void EmptyNode::valueOutOfBounds() {
+void EmptyBoardNode::valueOutOfBounds() {
 	if (this->node->getNumber() >= 1) {
 		this->value(
 				toString(this->node->getNumber(), "Input must be a number.").c_str());
@@ -66,7 +66,7 @@ void EmptyNode::valueOutOfBounds() {
 	throw std::invalid_argument(error);
 }
 
-void EmptyNode::reset() {
+void EmptyBoardNode::reset() {
 	this->node->setNumber(-1);
 	this->value("");
 }

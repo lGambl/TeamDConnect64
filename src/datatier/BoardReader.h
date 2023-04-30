@@ -8,7 +8,7 @@
 #ifndef DATATIER_BOARDREADER_H_
 #define DATATIER_BOARDREADER_H_
 
-#include <Node.h>
+#include <BoardNode.h>
 using namespace model;
 
 #include "Utils.h"
@@ -50,7 +50,7 @@ public:
 	 *
 	 * @return vector of node pointer
 	 */
-	vector<Node*> readNodeFile(const string fileName, int difficulty);
+	vector<BoardNode*> readNodeFile(const string fileName, int difficulty);
 
 	/**
 	 * Split given string into nodes if possible
@@ -58,7 +58,7 @@ public:
 	 * @param str the string
 	 * @return a vector of nodes
 	 */
-	vector<Node*> splitByComma(const string& str);
+	vector<BoardNode*> splitByComma(const string& str);
 };
 
 } /* namespace datatier */

@@ -17,13 +17,13 @@ BoardReader::~BoardReader() {
 
 }
 
-vector<Node*> BoardReader::readNodeFile(const string fileName, int difficulty) {
+vector<BoardNode*> BoardReader::readNodeFile(const string fileName, int difficulty) {
 	ifstream infile(fileName);
 	if (!infile) {
 		throw invalid_argument("\nFile " + fileName + " does not exist\n");
 	}
 
-	vector<Node*> nodes;
+	vector<BoardNode*> nodes;
 	string line;
 
 	int lineNumber = 0;
@@ -38,7 +38,7 @@ vector<Node*> BoardReader::readNodeFile(const string fileName, int difficulty) {
 	return nodes;
 }
 
-vector<Node*> BoardReader::splitByComma(const std::string& s) {
+vector<BoardNode*> BoardReader::splitByComma(const std::string& s) {
     vector<int> values;
     vector<bool> editables;
     istringstream ss(s);
@@ -55,9 +55,9 @@ vector<Node*> BoardReader::splitByComma(const std::string& s) {
     	count++;
     }
 
-    vector<Node*> nodes;
+    vector<BoardNode*> nodes;
     for (vector<int>::size_type i = 0; i < values.size(); i++) {
-    	nodes.push_back(new Node(values[i], editables[i]));
+    	nodes.push_back(new BoardNode(values[i], editables[i]));
     }
 
     return nodes;
