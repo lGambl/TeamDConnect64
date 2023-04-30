@@ -11,7 +11,7 @@ namespace view {
 
 MainWindow::MainWindow(int width, int height, const char *title) :
 		Fl_Window(width, height, title) {
-	this->checkSaves();
+
 	this->begin();
 
 	int widthCentering = width / 2;
@@ -31,10 +31,6 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->saveChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 120, itemWidth, itemHeight, "Saves: ");
 
-	for (string save : this->saves) {
-		this->saveChoice->add(save.c_str());
-	}
-
 	this->continueGameButton = new Fl_Button(widthCentering - (itemWidth + 50) / 2,
 			heightCentering - 80, itemWidth + 50, itemHeight, "Continue Game");
 	this->continueGameButton->callback(cb_showContinue, this);
@@ -46,6 +42,8 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
 			heightCentering + 50, itemWidth, itemHeight, "Quit");
 	this->quitButton->callback(cb_quit, this);
+
+	this->checkSaves();
 
 	this->end();
 	this->resizable(this);
@@ -94,9 +92,9 @@ void MainWindow::cb_quit_i() {
 void MainWindow::checkSaves() {
 	SaveHandler saver = SaveHandler();
 
-//	this->saveChoice->clear();
+	this->saveChoice->clear();
 	this->saves = saver.getSaves();
-	for (string save : this->saves) {
+	for (string save : saver.getSaves()) {
 		this->saveChoice->add(save.c_str());
 	}
 
@@ -111,6 +109,7 @@ void MainWindow::cb_showContinue(Fl_Widget*, void *data) {
 	}
 
 	string puzzle = ((MainWindow*) data)->saves[choice];
+	cout << puzzle << endl;
 
 	GameWindow *window = new GameWindow(400, 400, puzzle.c_str(), puzzle);
 	window->set_modal();
