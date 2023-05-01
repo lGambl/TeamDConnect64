@@ -102,6 +102,9 @@ void GameWindow::buildDisplay(int width, int height) {
 	this->end();
 	this->size_range(MINIMUM_SIZE, MINIMUM_SIZE);
 	this->resizable(this);
+
+	//Must be performed for to prevent dry checking
+	this->board->isSolved();
 }
 
 Fl_Fontsize GameWindow::calculateSizes(int width, int height) {
@@ -216,7 +219,7 @@ void GameWindow::cb_timer(void *data) {
 	}
 }
 
-void GameWindow::cb_pause(Fl_Widget*, void *data) { // FIXME: Refactor or make its own class
+void GameWindow::cb_pause(Fl_Widget*, void *data) {
 	Fl_Window *pauseDialog = new Fl_Window(300, 250, "Puzzle Paused");
 
 	Fl_Button ok_button(75, 95, 150, 30, "Continue Puzzle");
@@ -246,7 +249,7 @@ void GameWindow::saveGame() {
 	saver.saveGame(this->puzzleTitle, this->nodes, this->board->getTimer());
 }
 
-void GameWindow::displayCompleteDialog() { // FIXME: Refactor or make its own class
+void GameWindow::displayCompleteDialog() {
 	Fl_Window puzzleCompleteDialog(300, 150, "Puzzle Complete");
 
 	Fl_Box heading(125, 25, 50, 10, "Great job!!");
@@ -289,7 +292,7 @@ void GameWindow::displayCompleteDialog() { // FIXME: Refactor or make its own cl
 	}
 }
 
-string GameWindow::displayUsernameDialog() { // FIXME: Refactor or make its own class
+string GameWindow::displayUsernameDialog() {
 	Fl_Window usernameDialog(300, 100, "Enter Username");
 	Fl_Input input(100, 50, 100, 25, "Username:");
 	Fl_Box message(100, 20, 100, 25, "Please enter a username below.");

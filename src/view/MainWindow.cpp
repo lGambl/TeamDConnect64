@@ -64,7 +64,7 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->colors = getColors();
 
 	SaveHandler formatter;
-	this->highScores = formatter.loadAllRecords();
+	this->highScores = nullptr;
 
 	this->settings = formatter.loadUserSettings();
 	if (this->settings.size() == 0) {
@@ -136,9 +136,10 @@ void MainWindow::playPuzzles(int difficulty) {
 		if (window->isComplete()
 				&& !window->getGameScore()->getPlayerName().empty()) {
 
+			SaveHandler formatter;
+			this->highScores = formatter.loadRecords(difficulty);
 			this->highScores->addRecord(window->getGameScore());
 			this->saveRecords(difficulty);
-			cout << "test" << endl;
 		}
 
 		if (window->nextGame() && !window->shown()) {
@@ -196,11 +197,11 @@ void MainWindow::buildScoreboardOutput(int level, int sort) {
 
 void MainWindow::cb_scoreboard_update(Fl_Widget*, void *data) {
 	((MainWindow*) data)->buildScoreboardOutput(
-			((MainWindow*) data)->scoreboardLevelChoice->value(),
+			((MainWindow*) data)->scoreboardLevelChoice->value() - 1,
 			((MainWindow*) data)->scoreboardSortChoice->value());
 }
 
-void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or make its own class
+void MainWindow::cb_scoreboard(Fl_Widget*, void *data) {
 	Fl_Window scoreboardWindow(300, 350, "High Scoreboard");
 
 	((MainWindow*) data)->scoreboardSortChoice = new Fl_Choice(125, 15, 100, 30,
@@ -228,7 +229,7 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or m
 	((MainWindow*) data)->scoreboardLevelChoice->value(0);
 
 	Fl_Box heading(125, 100, 50, 10, "Top 10:");
-	((MainWindow*) data)->scoresList = new Fl_Text_Display(75, 125, 150, 150, "");
+	((MainWindow*) data)->scoresList = new Fl_Text_Display(25, 125, 250, 150, "");
 
 	Fl_Button resetButton(125, 290, 50, 30, "Reset");
 	resetButton.callback(
@@ -240,7 +241,7 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or m
 			}, ((MainWindow*) data));
 
 	((MainWindow*) data)->buildScoreboardOutput(
-			((MainWindow*) data)->scoreboardLevelChoice->value(),
+			((MainWindow*) data)->scoreboardLevelChoice->value() - 1,
 			((MainWindow*) data)->scoreboardSortChoice->value());
 
 	scoreboardWindow.add(((MainWindow*) data)->scoreboardSortChoice);
