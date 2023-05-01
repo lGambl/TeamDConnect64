@@ -106,6 +106,8 @@ public:
 
 	PlayerRecord* getGameScore();
 
+	void setColors(Fl_Color cellColor, Fl_Color textColor);
+
 private:
 	static void cb_timer(void*);
 	static void cb_pause(Fl_Widget*, void*);

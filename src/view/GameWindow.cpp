@@ -130,6 +130,19 @@ Fl_Fontsize GameWindow::calculateSizes(int width, int height) {
 	return inputBoxFontSize;
 }
 
+void GameWindow::setColors(Fl_Color cellColor, Fl_Color textColor) {
+	for (Fl_Widget *current : this->gameBoard) {
+		current->color(cellColor);
+
+		if (EmptyBoardNode *node = dynamic_cast<EmptyBoardNode*>(current)) {
+			node->textcolor(textColor);
+		}
+		else if (ExistingBoardNode *node = dynamic_cast<ExistingBoardNode*>(current)) {
+			node->textcolor(textColor);
+		}
+	}
+}
+
 void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 
 	int index = 0;

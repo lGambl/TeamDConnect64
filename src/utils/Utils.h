@@ -8,6 +8,9 @@
 #ifndef UTILS_UTILS_H_
 #define UTILS_UTILS_H_
 
+#include <FL/Fl.H>
+
+#include <map>
 #include <string>
 using namespace std;
 
@@ -25,5 +28,7 @@ using namespace std;
  * @return The int form of the given text.
  */
 int toInt(const string &text, const char *errorMessage);
+
+map<string, Fl_Color> getColors();
 
 #endif /* UTILS_UTILS_H_ */

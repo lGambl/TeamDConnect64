@@ -35,12 +35,16 @@ private:
 	vector<string> saves;
 	Fl_Choice *puzzleChoice;
 	Fl_Choice *saveChoice;
+	Fl_Button *settingsButton;
 	Fl_Button *continueGameButton;
 	Fl_Button *quitButton;
 	Fl_Button *playNewWindowButton;
 	Fl_Button *scoreboardButton;
 	Fl_Text_Display *scoresList;
 	Fl_Choice *scoreboardSortChoice;
+
+	string cellColor;
+	string textColor;
 
 	PlaitedRecordList *highScores;
 
@@ -63,6 +67,7 @@ public:
 	~MainWindow();
 
 private:
+	static void cb_settings(Fl_Widget*, void*);
 	static void cb_scoreboard(Fl_Widget*, void*);
 	static void cb_play(Fl_Widget*, void*);
 	static void cb_continue(Fl_Widget*, void*);
