@@ -18,25 +18,41 @@ using namespace model;
 #include <iomanip>
 using namespace std;
 
-namespace utils {
+/**
+ * Format the records list in string csv format.
+ *
+ * @precondition none
+ * @postcondition none
+ *
+ * @param records The list of high scores to format.
+ * @param result The passed in string to hold output.
+ */
+void getRecordsCSVOutput(PlaitedRecordList *records, string &result);
 
-class RecordOutputter {
-private:
-	vector<PlayerRecord> getRecordsListBySort(int sort,PlaitedRecordList* records);
-public:
-	RecordOutputter();
-	virtual ~RecordOutputter();
+/**
+ * Format the records list for display on screen.
+ *
+ * @precondition none
+ * @postcondition none
+ *
+ * @param records The list of high scores to format.
+ * @param sort The number 0-5 for what sort to do to the list.
+ *
+ * @return The string to display.
+ */
+string getRecordsOutput(PlaitedRecordList *records, int sort);
 
-	/**
-	 * Get the Records output in string csv format
-	 *
-	 * @param records
-	 * @param result passed in string to hold output
-	 */
-	void getRecordsCSVOutput(PlaitedRecordList *records,string &result);
-	string getRecordsOutput(PlaitedRecordList* records,int sort);
-};
-
-} /* namespace utils */
+/**
+ * Sorts the records list for display on screen.
+ *
+ * @precondition none
+ * @postcondition none
+ *
+ * @param records The list of high scores to format.
+ * @param sort The number 0-5 for what sort to do to the list.
+ *
+ * @return The list of scores to display.
+ */
+vector<PlayerRecord> getRecordsListBySort(PlaitedRecordList *records, int sort);
 
 #endif /* UTILS_RECORDOUTPUTTER_H_ */

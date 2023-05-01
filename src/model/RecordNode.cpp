@@ -30,16 +30,4 @@ RecordNode::~RecordNode() {
 	this->nextName = nullptr;
 }
 
-void RecordNode::setNextTime(RecordNode *node) {
-	this->nextTime = node;
-}
-
-void RecordNode::setNextName(RecordNode *node) {
-	this->nextName = node;
-}
-
-void RecordNode::setNextLevel(RecordNode *node) {
-	this->nextLevel = node;
-}
-
 } /* namespace model */

@@ -17,10 +17,10 @@ BoardReader::~BoardReader() {
 
 }
 
-vector<BoardNode*> BoardReader::readNodeFile(const string fileName, int difficulty) {
-	ifstream infile(fileName);
+vector<BoardNode*> BoardReader::readNodeFile(int difficulty) {
+	ifstream infile(BOARDSFILE);
 	if (!infile) {
-		throw invalid_argument("\nFile " + fileName + " does not exist\n");
+		throw invalid_argument("\nFile does not exist\n");
 	}
 
 	vector<BoardNode*> nodes;
@@ -38,29 +38,28 @@ vector<BoardNode*> BoardReader::readNodeFile(const string fileName, int difficul
 	return nodes;
 }
 
-vector<BoardNode*> BoardReader::splitByComma(const std::string& s) {
-    vector<int> values;
-    vector<bool> editables;
-    istringstream ss(s);
-    string token;
+vector<BoardNode*> BoardReader::splitByComma(const std::string &s) {
+	vector<int> values;
+	vector<bool> editables;
+	istringstream ss(s);
+	string token;
 
-    int count = 0;
-    while (std::getline(ss, token, ',')) {
-    	if (count % 2) {
-    		editables.push_back((bool)std::stoi(token));
-    	}
-    	else {
-    		values.push_back(std::stoi(token));
-    	}
-    	count++;
-    }
+	int count = 0;
+	while (std::getline(ss, token, ',')) {
+		if (count % 2) {
+			editables.push_back((bool) std::stoi(token));
+		} else {
+			values.push_back(std::stoi(token));
+		}
+		count++;
+	}
 
-    vector<BoardNode*> nodes;
-    for (vector<int>::size_type i = 0; i < values.size(); i++) {
-    	nodes.push_back(new BoardNode(values[i], editables[i]));
-    }
+	vector<BoardNode*> nodes;
+	for (vector<int>::size_type i = 0; i < values.size(); i++) {
+		nodes.push_back(new BoardNode(values[i], editables[i]));
+	}
 
-    return nodes;
+	return nodes;
 }
 
 } /* namespace datatier */

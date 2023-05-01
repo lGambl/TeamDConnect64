@@ -18,19 +18,20 @@ SaveHandler::~SaveHandler() {
 }
 
 Board* SaveHandler::loadSave(string &fileName) {
-	Board* board = this->readSaveFile(fileName);
+	Board *board = this->readSaveFile(fileName);
 	remove(fileName.c_str());
 	return board;
 }
 
-void SaveHandler::saveGame(string &fileName, vector<BoardNode*> nodes, int time) {
+void SaveHandler::saveGame(string &fileName, vector<BoardNode*> nodes,
+		int time) {
 	ofstream file(fileName);
 	string toSave = "";
 
 	toSave += to_string(time) + "\n";
 	for (vector<BoardNode*>::size_type i = 0; i < nodes.size(); i++) {
-		toSave += to_string(nodes[i]->getNumber()) + ","
-				+ to_string(nodes[i]->getPreset()) + ",";
+		toSave += to_string(nodes[i]->getNumber()) + DELIMITER
+				+ to_string(nodes[i]->getPreset()) + DELIMITER;
 	}
 	file << toSave;
 
@@ -45,7 +46,7 @@ vector<string> SaveHandler::getSaves() {
 		/* print all the files and directories within directory */
 		while ((ent = readdir(dir)) != NULL) {
 			string file = ent->d_name;
-			if (file.find("Puzzle") != string::npos) {
+			if (file.find(PUZZLE_FILE_NAME) != string::npos) {
 				puzzleFiles.push_back(file);
 			}
 		}
@@ -82,31 +83,32 @@ Board* SaveHandler::readSaveFile(string &fileName) {
 	return board;
 }
 
-void SaveHandler::saveRecords(PlaitedRecordList* records){
-	RecordOutputter outputter = RecordOutputter();
-	ofstream file("records.txt");
+void SaveHandler::saveRecords(PlaitedRecordList *records) {
+	ofstream file(RECORDS_FILE);
 	string toSave = "";
-	outputter.getRecordsCSVOutput(records, toSave);
+	getRecordsCSVOutput(records, toSave);
 
 	file << toSave;
 }
 
-PlaitedRecordList* SaveHandler::loadRecords(){
-	ifstream file("records.txt");
+PlaitedRecordList* SaveHandler::loadRecords() {
+	ifstream file(RECORDS_FILE);
 	string line;
 	string playerName, puzzle, timestr;
-	PlaitedRecordList* records = new PlaitedRecordList();
+	PlaitedRecordList *records = new PlaitedRecordList();
 
-	while(getline(file,line)){
+	while (getline(file, line)) {
 		stringstream ss(line);
 
-		if (getline(ss, playerName, ',') && getline(ss, puzzle, ',')
-				&& getline(ss, timestr)){
-			try{
+		if (getline(ss, playerName, LINE_DELIMETER)
+				&& getline(ss, puzzle, LINE_DELIMETER)
+				&& getline(ss, timestr)) {
+			try {
 				int time = stoi(timestr);
-				PlayerRecord* record = new PlayerRecord(puzzle,playerName,time);
+				PlayerRecord *record = new PlayerRecord(puzzle, playerName,
+						time);
 				records->addRecord(record);
-			}catch(const char *message){
+			} catch (const char *message) {
 				continue;
 			}
 		}

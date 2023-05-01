@@ -35,84 +35,49 @@ BoardNode::~BoardNode() {
 	}
 }
 
-bool BoardNode::isConnected() {
-	bool hasLowerNode = false;
+bool BoardNode::checkConnectedNode(BoardNode *nextNode) {
+
 	bool hasUpperNode = false;
+	bool hasLowerNode = false;
 
-	if (this->north != nullptr && this->north->getNumber() == this->number + 1) {
-		if (!hasUpperNode) {
-			hasUpperNode = true;
-		} else {
-			return false;
-		}
-	} else if (this->north != nullptr && this->north->getNumber() == this->number - 1) {
-		if (!hasLowerNode) {
-			hasLowerNode = true;
-		}
-	}
-	if (this->south != nullptr && this->south->getNumber() == this->number + 1) {
-		if (!hasUpperNode) {
-			hasUpperNode = true;
-		} else {
-			return false;
-		}
-	} else if (this->south != nullptr && this->south->getNumber() == this->number - 1) {
-		if (!hasLowerNode) {
-			hasLowerNode = true;
-		} else {
-			return false;
-		}
-	}
-	if (this->east != nullptr && this->east->getNumber() == this->number + 1) {
-		if (!hasUpperNode) {
-			hasUpperNode = true;
-		} else {
-			return false;
-		}
-	} else if (this->east != nullptr && this->east->getNumber() == this->number - 1) {
-		if (!hasLowerNode) {
-			hasLowerNode = true;
-		} else {
-			return false;
-		}
-	}
-	if (this->west != nullptr && this->west->getNumber() == this->number + 1) {
-		if (!hasUpperNode) {
-			hasUpperNode = true;
-		} else {
-			return false;
-		}
-	} else if (this->west != nullptr && this->west->getNumber() == this->number - 1) {
-		if (!hasLowerNode) {
-			hasLowerNode = true;
-		} else {
-			return false;
-		}
+	if (nextNode != nullptr && nextNode->getNumber() == this->number + 1) {
+		hasUpperNode = true;
+	} else if (nextNode != nullptr
+			&& nextNode->getNumber() == this->number - 1) {
+		hasLowerNode = true;
 	}
 
-	return hasLowerNode && hasUpperNode;
+	return hasUpperNode && hasLowerNode;
+}
+
+bool BoardNode::isConnected() {
+
+	bool isNorth = this->checkConnectedNode(this->north);
+	bool isSouth = this->checkConnectedNode(this->south);
+	bool isEast = this->checkConnectedNode(this->east);
+	bool isWest = this->checkConnectedNode(this->west);
+
+	return isNorth && isSouth && isEast && isWest;
 
 }
 
 BoardNode* BoardNode::getConnectedUpperNode() {
-//	if (this->isConnected()) {
-		if (this->north != nullptr && this->north->getNumber() == this->number + 1) {
-			return this->north;
-		}
-		if (this->south != nullptr && this->south->getNumber() == this->number + 1) {
-			return this->south;
-		}
-		if (this->east != nullptr && this->east->getNumber() == this->number + 1) {
-			return this->east;
-		}
-		if (this->west != nullptr && this->west->getNumber() == this->number + 1) {
-			return this->west;
-		}
-		else {
-			return nullptr;
-		}
-//	}
-//	return nullptr;
+	if (this->north != nullptr
+			&& this->north->getNumber() == this->number + 1) {
+		return this->north;
+	}
+	if (this->south != nullptr
+			&& this->south->getNumber() == this->number + 1) {
+		return this->south;
+	}
+	if (this->east != nullptr && this->east->getNumber() == this->number + 1) {
+		return this->east;
+	}
+	if (this->west != nullptr && this->west->getNumber() == this->number + 1) {
+		return this->west;
+	} else {
+		return nullptr;
+	}
 }
 
 } /* namespace model */

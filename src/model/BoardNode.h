@@ -23,6 +23,8 @@ private:
 	BoardNode *east;
 	BoardNode *west;
 
+	bool checkConnectedNode(BoardNode *nextNode);
+
 public:
 	/**
 	 * Initializes a node.
@@ -30,7 +32,8 @@ public:
 	 * @precondition none
 	 * @postcondition this->number = number
 	 *
-	 * @param number The number the node stores
+	 * @param number The number the node stores.
+	 * @param preset The node should be changeable or not.
 	 */
 	BoardNode(int number, bool preset);
 
@@ -45,7 +48,7 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The number stored in the node
+	 * @return The number stored in the node.
 	 */
 	int getNumber() {
 		return this->number;
@@ -55,9 +58,9 @@ public:
 	 * Setter for the number stored in the node.
 	 *
 	 * @precondition none
-	 * @postcondition this->number = number
+	 * @postcondition this->number == number
 	 *
-	 * @param number The new number to store in the node
+	 * @param number The new number to store in the node.
 	 */
 	void setNumber(int number) {
 		this->number = number;
@@ -69,7 +72,7 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The preset stored in the node
+	 * @return The preset stored in the node.
 	 */
 	bool getPreset() {
 		return this->preset;
@@ -79,9 +82,9 @@ public:
 	 * Setter for the preset stored in the node.
 	 *
 	 * @precondition none
-	 * @postcondition this->preset = preset
+	 * @postcondition this->preset == preset
 	 *
-	 * @param preset The new preset to store in the node
+	 * @param preset The new preset to store in the node.
 	 */
 	void setPreset(bool preset) {
 		this->preset = preset;
@@ -93,7 +96,7 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The pointer to the node to the east
+	 * @return The pointer to the node to the east.
 	 */
 	BoardNode*& getEast() {
 		return this->east;
@@ -103,9 +106,9 @@ public:
 	 * Setter for the east node pointer.
 	 *
 	 * @precondition none
-	 * @postcondition this->east = east
+	 * @postcondition this->east == east
 	 *
-	 * @param west The new east node pointer
+	 * @param east The new east node pointer.
 	 */
 	void setEast(BoardNode *&east) {
 		this->east = east;
@@ -117,7 +120,7 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The pointer to the node to the north
+	 * @return The pointer to the node to the north.
 	 */
 	BoardNode*& getNorth() {
 		return this->north;
@@ -127,9 +130,9 @@ public:
 	 * Setter for the north node pointer.
 	 *
 	 * @precondition none
-	 * @postcondition this->north = north
+	 * @postcondition this->north == north
 	 *
-	 * @param west The new north node pointer
+	 * @param north The new north node pointer.
 	 */
 	void setNorth(BoardNode *&north) {
 		this->north = north;
@@ -141,7 +144,7 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The pointer to the node to the south
+	 * @return The pointer to the node to the south.
 	 */
 	BoardNode*& getSouth() {
 		return this->south;
@@ -151,9 +154,9 @@ public:
 	 * Setter for the south node pointer.
 	 *
 	 * @precondition none
-	 * @postcondition this->south = south
+	 * @postcondition this->south == south
 	 *
-	 * @param west The new south node pointer
+	 * @param south The new south node pointer.
 	 */
 	void setSouth(BoardNode *&south) {
 		this->south = south;
@@ -175,7 +178,7 @@ public:
 	 * Setter for the west node pointer.
 	 *
 	 * @precondition none
-	 * @postcondition this->west = west
+	 * @postcondition this->west == west
 	 *
 	 * @param west The new west node pointer
 	 */
@@ -186,20 +189,20 @@ public:
 	/**
 	 * Checks if the node is connect to other nodes correctly
 	 *
-	 * @pre none
-	 * @post none
+	 * @precondition none
+	 * @postcondition none
 	 *
-	 * @return true if connect correctly, false if not
+	 * @return True if connect correctly, False otherwise
 	 */
 	bool isConnected();
 
 	/**
 	 * Gets the node that next if the node is connected properly
 	 *
-	 * @pre none
-	 * @post none
+	 * @precondition none
+	 * @postcondition none
 	 *
-	 * @return the connected node if there is one. If not return nullptr.
+	 * @return The connected node if exists, nullptr otherwise.
 	 */
 	BoardNode* getConnectedUpperNode();
 };

@@ -25,6 +25,10 @@ namespace model {
  */
 class Board {
 private:
+	static const int NUMBER_COLUMNS = 8;
+	static const int NUMBER_ROWS = 8;
+	const int MIN_VALUE = 1;
+
 	BoardNode *firstNode;
 	vector<BoardNode*> nodes;
 
@@ -36,15 +40,19 @@ private:
 	void setUpNodes();
 
 	bool checkIfNodeSolved(BoardNode *node);
+
+	void setEastNode(vector<BoardNode*>::size_type i, BoardNode *current);
+	void setWestNode(vector<BoardNode*>::size_type i, BoardNode *current);
+	void setNorthNode(vector<BoardNode*>::size_type i, BoardNode *current);
+	void setSouthNode(vector<BoardNode*>::size_type i, BoardNode *current);
+
 public:
-	const int MIN_VALUE = 1;
 
 	/**
-	 * Initializes a Board
+	 * Initializes a Board.
 	 *
-	 * @pre none
-	 * @post this->firstNode == nullptr
-	 *
+	 * @precondition none
+	 * @postcondition this->firstNode == nullptr
 	 */
 	Board();
 
@@ -54,21 +62,24 @@ public:
 	virtual ~Board();
 
 	/**
-	 * Loads a board given a vector of nodes
+	 * Loads a board given a vector of nodes.
 	 *
-	 * @pre none
-	 * @post this-> firstNode != nullptr
+	 * @precondition none
+	 * @postcondition this-> firstNode != nullptr
 	 *
-	 * @param nodes the nodes for the board
+	 * @param difficulty The difficulty to load.
 	 *
-	 * @return true if the board was loaded correctly and false if not
+	 * @return True if the board was loaded correctly and False if not.
 	 */
 	bool loadBoard(int difficulty);
 
 	/**
-	 * Checks if the board is solved
+	 * Checks if the board is solved.
 	 *
-	 * @return true if not and false if so
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return True if solved and false otherwise.
 	 */
 	bool isSolved();
 
@@ -78,7 +89,7 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The number of columns on the board
+	 * @return The number of columns on the board.
 	 */
 	int getNumberColumns() const {
 		return this->numberColumns;
@@ -90,7 +101,7 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The number of rows on the board
+	 * @return The number of rows on the board.
 	 */
 	int getNumberRows() const {
 		return this->numberRows;
@@ -102,36 +113,46 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
-	 * @return The nodes on the board
+	 * @return The nodes on the board.
 	 */
 	const vector<BoardNode*>& getNodes() const {
 		return this->nodes;
 	}
 
 	/**
-	 * Gets the timer
+	 * Getter for the timer of the board.
 	 *
-	 * @return timer
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return timer The timer for the board.
 	 */
 	int getTimer() const {
 		return this->timer;
 	}
 
 	/**
-	 * Sets the timer
+	 * Sets the timer.
 	 *
-	 *@pre none
-	 *@post this->timer == timer
+	 * @precondition none
+	 * @postcondition this->timer == timer
 	 *
-	 * @return
+	 * @param timer The new timer value.
 	 */
 	void setTimer(int timer) {
 		this->timer = timer;
 	}
 
+	/**
+	 * Setter for the list of nodes.
+	 *
+	 * @precondition none
+	 * @postcondition this.firstNode == nodes[i]
+	 *
+	 * @param nodes The new nodes for the board.
+	 */
 	void setNodes(vector<BoardNode*> nodes);
 };
-
 
 } /* namespace model */
 

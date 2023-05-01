@@ -21,56 +21,57 @@ private:
 	int time;
 	string playerName;
 	string level;
-	string entry;
 public:
 
 	/**
-	 * Instantiate a instance of a player record
+	 * Instantiate a instance of a player record.
 	 *
-	 * @pre none
-	 * @post this->level == level && this->playerName == playerName && this->time == time
+	 * @precondition none
+	 * @postcondition this->level == level &&
+	 * 					this->playerName == playerName &&
+	 * 					this->time == time
 	 *
-	 * @param level
-	 * @param playerName
-	 * @param time
+	 * @param level The name of the level.
+	 * @param playerName The name of the player.
+	 * @param time The time of the score (seconds).
 	 */
 	PlayerRecord(string level, string playerName, int time);
 	virtual ~PlayerRecord();
 
 	/**
-	 * Get the level
+	 * Getter for the level of the score.
 	 *
-	 * @return the level
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The level of the score.
 	 */
-	const string& getLevel(){
+	const string& getLevel() {
 		return this->level;
 	}
 
 	/**
-	 * Get the player name
+	 * Getter for the player name of the score.
 	 *
-	 * @return the player name
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The player name of the score.
 	 */
-	const string& getPlayerName(){
+	const string& getPlayerName() {
 		return this->playerName;
 	}
 
 	/**
-	 * Get the time
+	 * Getter for the time of the score.
 	 *
-	 * @return the time
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The time of the score (seconds).
 	 */
-	int getTime(){
+	int getTime() {
 		return this->time;
-	}
-
-	/**
-	 * Get the entry
-	 *
-	 * @return the entry
-	 */
-	const string& getEntry() {
-		return this->entry;
 	}
 
 };

@@ -27,38 +27,45 @@ namespace datatier {
  * A board reader class responsible for reading boards from files
  */
 class BoardReader {
+private:
+	const char *BOARDSFILE = "./src/boards.txt";
+
 public:
 	/**
-	 * Initializes a file handler
+	 * Initializes a file handler.
 	 */
 	BoardReader();
 
 	/**
-	 * Deconstructs a file handler
+	 * Deconstructs a file handler.
 	 */
 	virtual ~BoardReader();
 
 	/**
-	 * Reads a file for nodes
+	 * Reads a file for nodes.
 	 *
-	 * @pre File must have 64 nodes && exist
-	 * @post none
+	 * @precondition fileName.exists() && nodes in file == 64
+	 * @postcondition none
 	 *
-	 * @param fileName
+	 * @param difficulty The difficulty (line) to load from the file.
 	 *
-	 * @throw Illegal argument if file is not found
+	 * @throw Illegal argument if file is not found.
 	 *
-	 * @return vector of node pointer
+	 * @return A vector of node pointers.
 	 */
-	vector<BoardNode*> readNodeFile(const string fileName, int difficulty);
+	vector<BoardNode*> readNodeFile(int difficulty);
 
 	/**
-	 * Split given string into nodes if possible
+	 * Split given string into nodes if possible.
 	 *
-	 * @param str the string
-	 * @return a vector of nodes
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param str The line of nodes.
+	 *
+	 * @return A vector of node pointers.
 	 */
-	vector<BoardNode*> splitByComma(const string& str);
+	vector<BoardNode*> splitByComma(const string &str);
 };
 
 } /* namespace datatier */

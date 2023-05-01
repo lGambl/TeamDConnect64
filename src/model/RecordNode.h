@@ -25,59 +25,106 @@ private:
 	RecordNode *nextTime;
 public:
 	/**
-	 * Instantiates a Record Node
+	 * Instantiates a Record Node.
 	 *
-	 * @pre record != nullptr
-	 * @post this->record == record && this->nextName == nullptr && this->nextLevel == nullptr && this->nextTime == nullptr
+	 * @precondition record != nullptr
+	 * @postcondition this->record == record && this->nextName == nullptr &&
+	 * 					this->nextLevel == nullptr &&
+	 * 					this->nextTime == nullptr
 	 *
-	 * @param record
+	 * @param The record of the score.
 	 */
 	RecordNode(PlayerRecord *record);
 
 	/**
-	 * Deconstructor for record node
+	 * Deconstructor for record node.
 	 */
 	virtual ~RecordNode();
 
 	/**
-	 * Get Record
+	 * Getter for the record.
 	 *
-	 * @return record
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The current score record.
 	 */
 	PlayerRecord* getRecord() {
 		return this->record;
 	}
 
 	/**
-	 * Get record with the next name
+	 * Get record with the next name.
 	 *
-	 * @return record
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The next score by name.
 	 */
 	RecordNode* getNextName() {
 		return this->nextName;
 	}
 
 	/**
-	 * Get record with the next time
+	 * Get record with the next time.
 	 *
-	 * @return record
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The next score by time.
 	 */
 	RecordNode* getNextTime() {
 		return this->nextTime;
 	}
 
 	/**
-	 * Get record with the next level
+	 * Get record with the next level.
 	 *
-	 * @return record
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The next score by level.
 	 */
 	RecordNode* getNextLevel() {
 		return this->nextLevel;
 	}
 
-	void setNextTime(RecordNode* node);
-	void setNextLevel(RecordNode* node);
-	void setNextName(RecordNode* node);
+	/**
+	 * Set the next time record.
+	 *
+	 * @precondition node != nullptr
+	 * @postcondition this-nextTime == node
+	 *
+	 * @param node The next time node.
+	 */
+	void setNextTime(RecordNode *node) {
+		this->nextTime = node;
+	}
+
+	/**
+	 * Set the next level record.
+	 *
+	 * @precondition node != nullptr
+	 * @postcondition this-nextLevel == node
+	 *
+	 * @param node The next level node.
+	 */
+	void setNextLevel(RecordNode *node) {
+		this->nextLevel = node;
+	}
+
+	/**
+	 * Set the next name record.
+	 *
+	 * @precondition node != nullptr
+	 * @postcondition this-nextName == node
+	 *
+	 * @param node The next name node.
+	 */
+	void setNextName(RecordNode *node) {
+		this->nextName = node;
+	}
+
 };
 
 } /* namespace model */

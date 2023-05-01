@@ -21,6 +21,8 @@ namespace model {
 
 class PlaitedRecordList {
 private:
+	static const int MAX_SIZE = 10;
+
 	RecordNode *timeHeader;
 	RecordNode *levelHeader;
 	RecordNode *nameHeader;
@@ -44,13 +46,64 @@ private:
 
 	void removeRecord(RecordNode *nodeToRemove);
 public:
+	/**
+	 * Initializes a high score list.
+	 *
+	 * @precondition none
+	 * @postcondition this->timeHeader == nullptr &&
+	 * 					this->nameHeader == nullptr &&
+	 * 					this->levelHeader == nullptr &&
+	 * 					this->size == 0
+	 */
 	PlaitedRecordList();
+
+	/**
+	 * Deconstructor for the list.
+	 */
 	virtual ~PlaitedRecordList();
 
+	/**
+	 * Adds a scores to the list.
+	 *
+	 * @precondition none
+	 * @postcondition this->size @pre + 1 == this->size
+	 *
+	 * @param node The score to add.
+	 */
 	void addRecord(PlayerRecord *node);
 
+	/**
+	 * Gets the scores by name depending on direction.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param direction True for ascending, False for descending.
+	 * @return The list of scores in order.
+	 */
 	vector<PlayerRecord> getRecordsByPlayerName(bool direction);
+
+	/**
+	 * Gets the scores by length depending on direction
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param direction True for ascending, False for descending
+	 * @return The list of scores in order
+	 */
 	vector<PlayerRecord> getRecordsByLevel(bool direction);
+
+	/**
+	 * Gets the scores by time depending on direction.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param direction True for ascending, False for descending.
+	 *
+	 * @return The list of scores in order.
+	 */
 	vector<PlayerRecord> getRecordsByTime(bool direction);
 };
 

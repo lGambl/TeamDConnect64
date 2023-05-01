@@ -19,11 +19,3 @@ int toInt(const string &text, const char *errorMessage) {
 
 	return value;
 }
-
-string toString(int value, const char *errorMessage) {
-	try {
-		return to_string(value);
-	} catch (const char *message) {
-		throw message;
-	}
-}

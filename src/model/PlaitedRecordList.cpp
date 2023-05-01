@@ -25,14 +25,6 @@ PlaitedRecordList::~PlaitedRecordList() {
 	this->size = 0;
 }
 
-/**
- * Adds a movie to the list
- *
- * @pre none
- * @post this->size @pre + 1 = this->size
- *
- * @param movie to add
- */
 void PlaitedRecordList::addRecord(PlayerRecord *movie) {
 	RecordNode *newRecord = new RecordNode(movie);
 
@@ -41,8 +33,8 @@ void PlaitedRecordList::addRecord(PlayerRecord *movie) {
 	this->insertByLevel(newRecord);
 	this->size++;
 
-	if (this->size > 10){
-		RecordNode* badNode = this->getNodeWithHighestTime();
+	if (this->size > MAX_SIZE) {
+		RecordNode *badNode = this->getNodeWithHighestTime();
 		this->removeRecord(badNode);
 	}
 }
@@ -116,14 +108,6 @@ void PlaitedRecordList::insertByLevel(RecordNode *record) {
 	current->setNextLevel(record);
 }
 
-/**
- * Removes a movie from the list
- *
- * @pre none
- * @post none || this->size @pre - 1 == this->size
- *
- * @param movieName to remove
- */
 void PlaitedRecordList::removeRecord(RecordNode *node) {
 
 	this->removeNodeFromTimeList(node);
@@ -197,15 +181,6 @@ void PlaitedRecordList::removeNodeFromLevelList(RecordNode *nodeToRemove) {
 	nodeToRemove->setNextLevel(nullptr);
 }
 
-/**
- * Gets the movies by name depending on direction
- *
- * @pre none
- * @post none
- *
- * @param direction true for ascending, false for descending
- * @return the list of movies in order
- */
 vector<PlayerRecord> PlaitedRecordList::getRecordsByPlayerName(bool direction) {
 	vector<PlayerRecord> movies;
 	if (this->nameHeader == nullptr) {
@@ -235,15 +210,6 @@ void PlaitedRecordList::getRecordsByNameDSC(vector<PlayerRecord> &movies,
 	}
 }
 
-/**
- * Gets the movies by length depending on direction
- *
- * @pre none
- * @post none
- *
- * @param direction true for ascending, false for descending
- * @return the list of movies in order
- */
 vector<PlayerRecord> PlaitedRecordList::getRecordsByLevel(bool direction) {
 	vector<PlayerRecord> movies;
 	if (this->levelHeader == nullptr) {
@@ -274,15 +240,6 @@ void PlaitedRecordList::getRecordsByLevelDSC(vector<PlayerRecord> &records,
 	}
 }
 
-/**
- * Gets the movies by length depending on direction
- *
- * @pre none
- * @post none
- *
- * @param direction true for ascending, false for descending
- * @return the list of movies in order
- */
 vector<PlayerRecord> PlaitedRecordList::getRecordsByTime(bool direction) {
 	vector<PlayerRecord> records;
 	if (this->timeHeader == nullptr) {

@@ -20,21 +20,10 @@ using namespace std;
  * @param text The text to convert.
  * @param errorMessage The error message if it fails
  *
+ * @throw errorMessage if text cannot be converted to a number.
+ *
  * @return The int form of the given text.
  */
 int toInt(const string &text, const char *errorMessage);
-
-/**
- * Converts a given integer to text.
- *
- * @precondition none
- * @postcondition none
- *
- * @param value The integer to convert.
- * @param errorMessage The error message if it fails
- *
- * @return The text form of the given integer.
- */
-string toString(int value, const char *errorMessage);
 
 #endif /* UTILS_UTILS_H_ */

@@ -14,7 +14,6 @@
 using namespace model;
 
 #include <RecordOutputter.h>
-using namespace utils;
 
 #include <vector>
 #include <string>
@@ -33,44 +32,76 @@ namespace datatier {
 class SaveHandler {
 
 private:
-	Board* readSaveFile(string& fileName) ;
+	Board* readSaveFile(string &fileName);
+
+	const char *RECORDS_FILE = "records.txt"; // FIXME: Move to utils const file
+	const char *DELIMITER = ",";
+	static const char LINE_DELIMETER = ',';
+	const char *PUZZLE_FILE_NAME = "Puzzle";
+
 public:
 	/**
-	 * Initializes a save handler
+	 * Initializes a save handler.
 	 */
 	SaveHandler();
 
 	/**
-	 * Deconstructs a save handler
+	 * Deconstructs a save handler.
 	 */
 	virtual ~SaveHandler();
 
 	/**
-	 * Load a save given a file name
+	 * Load a save given a file name.
 	 *
-	 * @param fileName
+	 * @precondition none
+	 * @postcondition none
 	 *
-	 * @return nodes of the board
+	 * @param fileName The file to load.
+	 *
+	 * @return The board in the file.
 	 */
 	Board* loadSave(string &fileName);
 
 	/**
-	 * Save a game to a give file
+	 * Save a game to a give file.
 	 *
-	 * @param fileName
-	 * @param nodes
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param fileName The file to save to.
+	 * @param nodes The nodes to save out.
+	 * @param time The time spent on the board in seconds.
 	 */
 	void saveGame(string &fileName, vector<BoardNode*> nodes, int time);
 
 	/**
-	 * Get saves that are in the main directory of the project
+	 * Get saves that are in the main directory of the project.
 	 *
-	 * @return a vector of all save names
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return A vector of all save names.
 	 */
 	vector<string> getSaves();
 
-	void saveRecords(PlaitedRecordList* records);
+	/**
+	 * Saves the records in a given list.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param records The high scores to save out.
+	 */
+	void saveRecords(PlaitedRecordList *records);
 
+	/**
+	 * Loads a plaited list of records.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return PlaitedRecordList of high scores.
+	 */
 	PlaitedRecordList* loadRecords();
 };
 
