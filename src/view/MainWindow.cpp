@@ -12,33 +12,41 @@ namespace view {
 void MainWindow::buildDisplay(int width, int height) {
 	int widthCentering = width / 2;
 	int heightCentering = height / 2;
+
 	int itemWidth = 70;
 	int itemHeight = 30;
+
 	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
 	for (int i = 1; i <= MAX_DIFFICULTY + 1; i++) {
 		string value = to_string(i);
 		this->puzzleChoice->add(value.c_str());
 	}
+
 	this->saveChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 120, itemWidth, itemHeight, "Saves: ");
 	this->settingsButton = new Fl_Button(width - itemWidth - 10, 10, itemWidth,
 			itemHeight, "Settings");
 	this->settingsButton->callback(cb_settings, this);
+
 	this->continueGameButton = new Fl_Button(
 			widthCentering - (itemWidth + 50) / 2, heightCentering - 80,
 			itemWidth + 50, itemHeight, "Continue Game");
 	this->continueGameButton->callback(cb_continue, this);
+
 	this->playNewWindowButton = new Fl_Button(widthCentering - itemWidth / 2,
 			heightCentering + 5, itemWidth, itemHeight, "Play");
 	this->playNewWindowButton->callback(cb_play, this);
+
 	this->scoreboardButton = new Fl_Button(
 			widthCentering - (itemWidth + 20) / 2, heightCentering + 50,
 			itemWidth + 20, itemHeight, "Scoreboard");
 	this->scoreboardButton->callback(cb_scoreboard, this);
+
 	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
 			heightCentering + 100, itemWidth, itemHeight, "Quit");
 	this->quitButton->callback(cb_quit, this);
+
 	this->checkSaves();
 }
 
@@ -56,7 +64,7 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->colors = getColors();
 
 	SaveHandler formatter;
-	this->highScores = formatter.loadRecords();
+	this->highScores = formatter.loadAllRecords();
 
 	this->settings = formatter.loadUserSettings();
 	if (this->settings.size() == 0) {
@@ -68,9 +76,9 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 MainWindow::~MainWindow() {
 }
 
-void MainWindow::saveRecords() {
+void MainWindow::saveRecords(int level) {
 	SaveHandler formatter;
-	formatter.saveRecords(this->highScores);
+	formatter.saveRecords(this->highScores, level);
 }
 
 void MainWindow::cb_settings(Fl_Widget*, void *data) {
@@ -129,7 +137,7 @@ void MainWindow::playPuzzles(int difficulty) {
 				&& !window->getGameScore()->getPlayerName().empty()) {
 
 			this->highScores->addRecord(window->getGameScore());
-			this->saveRecords();
+			this->saveRecords(difficulty);
 		}
 
 		if (window->nextGame() && !window->shown()) {
@@ -158,15 +166,17 @@ void MainWindow::cb_play(Fl_Widget *o, void *data) {
 	((MainWindow*) data)->saveChoice->value(-1);
 }
 
-void MainWindow::buildOutput(void *data, int sort) {
+void MainWindow::buildScoreboardOutput(int level, int sort) {
 	Fl_Text_Buffer *scoresBuffer = new Fl_Text_Buffer();
 
-	string output = getRecordsOutput(((MainWindow*) (data))->highScores, sort);
+	SaveHandler formatter;
+	this->highScores = formatter.loadRecords(level);
+	string output = getRecordsOutput(this->highScores, sort);
 
 	scoresBuffer->text(output.c_str());
 
 	this->scoresList->buffer(scoresBuffer);
-	this->saveRecords();
+	this->saveRecords(level);
 }
 
 void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or make its own class
@@ -181,15 +191,27 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or m
 	for (vector<string>::size_type i = 0; i < sorts.size(); i++) {
 		((MainWindow*) data)->scoreboardSortChoice->add(sorts[i].c_str());
 	}
+
 	((MainWindow*) data)->scoreboardSortChoice->value(1);
 	((MainWindow*) data)->scoreboardSortChoice->callback(
 			[](Fl_Widget *w, void *buttonData) {
-				((MainWindow*) buttonData)->buildOutput(
-						((MainWindow*) buttonData),
+				((MainWindow*) buttonData)->buildScoreboardOutput(
+						((MainWindow*) buttonData)->scoreboardLevelChoice->value(),
 						((MainWindow*) buttonData)->scoreboardSortChoice->value());
 			}, ((MainWindow*) data));
 
-	Fl_Choice puzzleOptions(125, 50, 100, 30, "Puzzle: ");
+	((MainWindow*) data)->scoreboardLevelChoice = new Fl_Choice(125, 50, 100, 30, "Puzzle: ");
+	for (int i = 1; i <= MAX_DIFFICULTY + 1; i++) {
+		string value = to_string(i);
+		((MainWindow*) data)->scoreboardLevelChoice->add(value.c_str());
+	}
+
+	((MainWindow*) data)->scoreboardLevelChoice->callback(
+			[](Fl_Widget *w, void *buttonData) {
+				((MainWindow*) buttonData)->buildScoreboardOutput(
+						((MainWindow*) buttonData)->scoreboardLevelChoice->value(),
+						((MainWindow*) buttonData)->scoreboardSortChoice->value());
+			}, ((MainWindow*) data));
 
 	Fl_Box heading(125, 100, 50, 10, "Top 10:");
 	((MainWindow*) data)->scoresList = new Fl_Text_Display(75, 125, 150, 150,
@@ -202,16 +224,17 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or m
 				((MainWindow*) buttonData)->highScores =
 						new PlaitedRecordList();
 
-				((MainWindow*) buttonData)->buildOutput(
-						((MainWindow*) buttonData),
-						((MainWindow*) buttonData)->scoreboardSortChoice->value());
+				((MainWindow*) buttonData)->buildScoreboardOutput(
+										((MainWindow*) buttonData)->scoreboardLevelChoice->value(),
+										((MainWindow*) buttonData)->scoreboardSortChoice->value());
 			}, ((MainWindow*) data));
 
-	((MainWindow*) data)->buildOutput(data,
-			((MainWindow*) data)->scoreboardSortChoice->value());
+	((MainWindow*) data)->buildScoreboardOutput(
+					((MainWindow*) data)->scoreboardLevelChoice->value(),
+					((MainWindow*) data)->scoreboardSortChoice->value());
 
 	scoreboardWindow.add(((MainWindow*) data)->scoreboardSortChoice);
-	scoreboardWindow.add(puzzleOptions);
+	scoreboardWindow.add(((MainWindow*) data)->scoreboardLevelChoice);
 	scoreboardWindow.add(heading);
 	scoreboardWindow.add(((MainWindow*) data)->scoresList);
 	scoreboardWindow.add(resetButton);

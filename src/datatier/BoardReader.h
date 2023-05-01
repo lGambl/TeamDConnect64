@@ -28,7 +28,7 @@ namespace datatier {
  */
 class BoardReader {
 private:
-	const char *BOARDSFILE = "./src/boards.txt";
+	const char *BOARDSFILE = "./data/boards.txt";
 
 public:
 	/**

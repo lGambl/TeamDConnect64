@@ -19,6 +19,7 @@ using namespace model;
 #include <string>
 #include <iostream>
 #include <dirent.h>
+#include <regex>
 using namespace std;
 
 #include <BoardReader.h>
@@ -34,11 +35,14 @@ class SaveHandler {
 private:
 	Board* readSaveFile(string &fileName);
 
-	const char *RECORDS_FILE = "records.txt"; // FIXME: Move to utils const file
-	const char *SETTINGS_FILE = "settings.txt";
+	const char *RECORDS_FILE = "./data/records.txt"; // FIXME: Move to utils const file
+	const char *SETTINGS_FILE = "./data/settings.txt";
 	const char *DELIMITER = ",";
 	static const char LINE_DELIMETER = ',';
 	const char *PUZZLE_FILE_NAME = "Puzzle";
+	const char *SAVES_DIRECTORY = "./data/saves/";
+	const char *RECORDS_DIRECTORY = "./data/records/";
+	const char *RECORD_FILE_NAME = "./data/records/records";
 
 public:
 	/**

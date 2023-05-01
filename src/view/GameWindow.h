@@ -18,6 +18,7 @@
 
 #include "EmptyBoardNode.h"
 #include "ExistingBoardNode.h"
+#include "MainWindow.h"
 
 #include <iostream>
 #include <sstream>
@@ -39,7 +40,6 @@ namespace view {
 class GameWindow: public Fl_Window {
 private:
 	static const int MINIMUM_SIZE = 300;
-	static const int MAX_DIFFICULTY = 4;
 
 	Fl_Output *timerOutput;
 	Fl_Button *closeButton;

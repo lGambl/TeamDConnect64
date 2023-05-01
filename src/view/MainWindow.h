@@ -30,8 +30,6 @@ namespace view {
  */
 class MainWindow: public Fl_Window {
 private:
-	static const int MAX_DIFFICULTY = 4;
-
 	vector<string> saves;
 	Fl_Choice *puzzleChoice;
 	Fl_Choice *saveChoice;
@@ -42,6 +40,7 @@ private:
 	Fl_Button *scoreboardButton;
 	Fl_Text_Display *scoresList;
 	Fl_Choice *scoreboardSortChoice;
+	Fl_Choice *scoreboardLevelChoice;
 
 	map<string, Fl_Color> colors;
 
@@ -49,6 +48,11 @@ private:
 	vector<string> settings;
 
 public:
+	/**
+	 * The max difficulty for the puzzles
+	 */
+	static const int MAX_DIFFICULTY = 12;
+
 	/**
 	 * Initializes a main window for display.
 	 *
@@ -79,9 +83,9 @@ private:
 
 	void updateInputDisplay(const char *text);
 
-	void buildOutput(void *data, int sort);
+	void buildScoreboardOutput(int level, int sort);
 
-	void saveRecords();
+	void saveRecords(int level);
 
 	void playPuzzles(int difficulty);
 	void buildDisplay(int width, int height);

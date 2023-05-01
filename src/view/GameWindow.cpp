@@ -64,7 +64,7 @@ void GameWindow::buildDisplay(int width, int height) {
 	this->numberColumns = this->board->getNumberColumns();
 	int maxNumber = this->numberColumns * this->numberRows;
 
-	Fl_Fontsize inputBoxFontSize = calculateSizes(width, height);
+	Fl_Fontsize inputBoxFontSize = this->calculateSizes(width, height);
 
 	this->begin();
 
@@ -262,7 +262,7 @@ void GameWindow::displayCompleteDialog() { // FIXME: Refactor or make its own cl
 	puzzleCompleteDialog.add(ok_button);
 
 	int stopPlayingX = 150;
-	if (this->difficulty >= MAX_DIFFICULTY) {
+	if (this->difficulty >= MainWindow::MAX_DIFFICULTY) {
 		ok_button.hide();
 		stopPlayingX = 100;
 	}

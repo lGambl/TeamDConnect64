@@ -18,14 +18,15 @@ SaveHandler::~SaveHandler() {
 }
 
 Board* SaveHandler::loadSave(string &fileName) {
-	Board *board = this->readSaveFile(fileName);
-	remove(fileName.c_str());
+	string filePath = SAVES_DIRECTORY + fileName;
+	Board *board = this->readSaveFile(filePath);
+	remove(filePath.c_str());
 	return board;
 }
 
 void SaveHandler::saveGame(string &fileName, vector<BoardNode*> nodes,
 		int time) {
-	ofstream file(fileName);
+	ofstream file(SAVES_DIRECTORY + fileName);
 	string toSave = "";
 
 	toSave += to_string(time) + "\n";
@@ -42,7 +43,7 @@ vector<string> SaveHandler::getSaves() {
 
 	DIR *dir;
 	struct dirent *ent;
-	if ((dir = opendir(".")) != NULL) {
+	if ((dir = opendir(SAVES_DIRECTORY)) != NULL) {
 		/* print all the files and directories within directory */
 		while ((ent = readdir(dir)) != NULL) {
 			string file = ent->d_name;
@@ -84,7 +85,8 @@ Board* SaveHandler::readSaveFile(string &fileName) {
 }
 
 void SaveHandler::saveRecords(PlaitedRecordList *records, int level) {
-	ofstream file("records"+ to_string(level) +".txt");
+	string filePath = RECORD_FILE_NAME + to_string(level) + ".txt";
+	ofstream file(filePath.c_str());
 	string toSave = "";
 	getRecordsCSVOutput(records, toSave);
 
@@ -92,7 +94,8 @@ void SaveHandler::saveRecords(PlaitedRecordList *records, int level) {
 }
 
 PlaitedRecordList* SaveHandler::loadRecords(int level) {
-	ifstream file("records"+ to_string(level) +".txt");
+	string filePath = RECORD_FILE_NAME + to_string(level) + ".txt";
+	ifstream file(filePath.c_str());
 	string line;
 	string playerName, puzzle, timestr;
 	PlaitedRecordList *records = new PlaitedRecordList();
@@ -117,36 +120,45 @@ PlaitedRecordList* SaveHandler::loadRecords(int level) {
 	return records;
 }
 
-PlaitedRecordList* SaveHandler::loadAllRecords(){
+PlaitedRecordList* SaveHandler::loadAllRecords() {
 	PlaitedRecordList *records = new PlaitedRecordList();
 
 	vector<string> recordFiles;
 
-		DIR *dir;
-		struct dirent *ent;
-		if ((dir = opendir(".")) != NULL) {
-			/* print all the files and directories within directory */
-			while ((ent = readdir(dir)) != NULL) {
-				string file = ent->d_name;
-				if (file.find("records") != string::npos) {
-					recordFiles.push_back(file);
-				}
-			}
-			closedir(dir);
-		} else {
-			/* could not open directory */
-			perror("");
-		}
-
-		for(string recordsFile : recordFiles){
-			int level = stoi(recordsFile);
-			PlaitedRecordList* list = this->loadRecords(level);
-			for(RecordNode* node : list->getRecordsByTime(false)){
-				records->addRecord(node->getRecord());
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir(RECORDS_DIRECTORY)) != NULL) {
+		/* print all the files and directories within directory */
+		while ((ent = readdir(dir)) != NULL) {
+			string file = ent->d_name;
+			if (file.find("records") != string::npos) {
+				recordFiles.push_back(file);
 			}
 		}
+		closedir(dir);
+	} else {
+		/* could not open directory */
+		perror("");
+	}
 
-		return records;
+	regex pattern(R"(\d+)");
+	smatch match;
+	for (string recordsFile : recordFiles) {
+
+		if (regex_search(recordsFile, match, pattern)) {
+			int level = stoi(match[0]);
+
+			PlaitedRecordList *list = this->loadRecords(level);
+			for (PlayerRecord node : list->getRecordsByTime(false)) {
+				PlayerRecord *newNode = new PlayerRecord(node.getLevel(),
+						node.getPlayerName(), node.getTime());
+
+				records->addRecord(newNode);
+			}
+		}
+	}
+
+	return records;
 
 }
 
