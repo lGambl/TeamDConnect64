@@ -28,8 +28,8 @@ string getRecordsOutput(PlaitedRecordList *records, int sort) {
 	stringstream ss;
 	for (PlayerRecord single : list) {
 
-		ss << left << setw(30) << single.getPlayerName().c_str() << setw(20)
-				<< single.getLevel().c_str() << setw(10) << single.getTime()
+		ss << left << setw(35) << single.getPlayerName().c_str() << setw(35)
+				<< single.getLevel().c_str() << setw(30) << single.getTime()
 				<< endl;
 	}
 
