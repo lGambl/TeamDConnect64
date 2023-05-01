@@ -82,4 +82,38 @@ Board* SaveHandler::readSaveFile(string &fileName) {
 	return board;
 }
 
+void SaveHandler::saveRecords(PlaitedRecordList* records){
+	RecordOutputter outputter = RecordOutputter();
+	ofstream file("records.txt");
+	string toSave = "";
+	outputter.getRecordsCSVOutput(records, toSave);
+
+	file << toSave;
+}
+
+PlaitedRecordList* SaveHandler::loadRecords(){
+	ofstream file("records.txt");
+	string line;
+	stringstream ss(line);
+	string playerName, puzzle, timestr;
+	PlaitedRecordList* records = new PlaitedRecordList();
+
+	while(getline(ss,line)){
+		if (getline(ss, playerName, ',') && getline(ss, puzzle, ',')
+				&& getline(ss, timestr, ',')){
+			try{
+				int time = stoi(timestr);
+				PlayerRecord* record = new PlayerRecord(puzzle,playerName,time);
+				records->addRecord(record);
+			}catch(const char *message){
+				continue;
+			}
+		}
+	}
+
+	return records;
+
+
+}
+
 } /* namespace datatier */

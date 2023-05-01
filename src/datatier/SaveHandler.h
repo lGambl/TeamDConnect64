@@ -10,7 +10,11 @@
 
 #include <BoardNode.h>
 #include <Board.h>
+#include <PlaitedRecordList.h>
 using namespace model;
+
+#include <RecordOutputter.h>
+using namespace utils;
 
 #include <vector>
 #include <string>
@@ -64,6 +68,10 @@ public:
 	 * @return a vector of all save names
 	 */
 	vector<string> getSaves();
+
+	void saveRecords(PlaitedRecordList* records);
+
+	PlaitedRecordList* loadRecords();
 };
 
 } /* namespace datatier */
