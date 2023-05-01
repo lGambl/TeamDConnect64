@@ -72,6 +72,7 @@ public:
 
 private:
 	static void cb_settings(Fl_Widget*, void*);
+	static void cb_scoreboard_update(Fl_Widget*, void*);
 	static void cb_scoreboard(Fl_Widget*, void*);
 	static void cb_play(Fl_Widget*, void*);
 	static void cb_continue(Fl_Widget*, void*);

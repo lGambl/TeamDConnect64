@@ -138,6 +138,7 @@ void MainWindow::playPuzzles(int difficulty) {
 
 			this->highScores->addRecord(window->getGameScore());
 			this->saveRecords(difficulty);
+			cout << "test" << endl;
 		}
 
 		if (window->nextGame() && !window->shown()) {
@@ -167,16 +168,36 @@ void MainWindow::cb_play(Fl_Widget *o, void *data) {
 }
 
 void MainWindow::buildScoreboardOutput(int level, int sort) {
+
+	if (this->highScores == nullptr && level >= 1) {
+		this->highScores = new PlaitedRecordList();
+		this->saveRecords(level);
+	}
+	else if (this->highScores == nullptr) {
+		for (int i = 1; i <= MAX_DIFFICULTY + 1; i++) {
+			this->highScores = new PlaitedRecordList();
+			this->saveRecords(i);
+		}
+	}
+
+	if (level >= 0) {
+		SaveHandler formatter;
+		this->highScores = formatter.loadRecords(level);
+	}
+
 	Fl_Text_Buffer *scoresBuffer = new Fl_Text_Buffer();
 
-	SaveHandler formatter;
-	this->highScores = formatter.loadRecords(level);
 	string output = getRecordsOutput(this->highScores, sort);
 
 	scoresBuffer->text(output.c_str());
 
 	this->scoresList->buffer(scoresBuffer);
-	this->saveRecords(level);
+}
+
+void MainWindow::cb_scoreboard_update(Fl_Widget*, void *data) {
+	((MainWindow*) data)->buildScoreboardOutput(
+			((MainWindow*) data)->scoreboardLevelChoice->value(),
+			((MainWindow*) data)->scoreboardSortChoice->value());
 }
 
 void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or make its own class
@@ -185,53 +206,42 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or m
 	((MainWindow*) data)->scoreboardSortChoice = new Fl_Choice(125, 15, 100, 30,
 			"Sort: ");
 
-	vector<string> sorts = { "Time Ascending", "Time Descending",
-			"Name Ascending", "Name Descending", "Level Ascending",
-			"Level Descending" };
+	vector<string> sorts = { "Time Ascending", "Time Descending", "Name Ascending",
+			"Name Descending", "Level Ascending", "Level Descending" };
 	for (vector<string>::size_type i = 0; i < sorts.size(); i++) {
 		((MainWindow*) data)->scoreboardSortChoice->add(sorts[i].c_str());
 	}
 
 	((MainWindow*) data)->scoreboardSortChoice->value(1);
-	((MainWindow*) data)->scoreboardSortChoice->callback(
-			[](Fl_Widget *w, void *buttonData) {
-				((MainWindow*) buttonData)->buildScoreboardOutput(
-						((MainWindow*) buttonData)->scoreboardLevelChoice->value(),
-						((MainWindow*) buttonData)->scoreboardSortChoice->value());
-			}, ((MainWindow*) data));
+	((MainWindow*) data)->scoreboardSortChoice->callback(cb_scoreboard_update,
+			((MainWindow*) data));
 
-	((MainWindow*) data)->scoreboardLevelChoice = new Fl_Choice(125, 50, 100, 30, "Puzzle: ");
+	((MainWindow*) data)->scoreboardLevelChoice = new Fl_Choice(125, 50, 100, 30,
+			"Puzzle: ");
+	((MainWindow*) data)->scoreboardLevelChoice->add("All");
 	for (int i = 1; i <= MAX_DIFFICULTY + 1; i++) {
 		string value = to_string(i);
 		((MainWindow*) data)->scoreboardLevelChoice->add(value.c_str());
 	}
-
-	((MainWindow*) data)->scoreboardLevelChoice->callback(
-			[](Fl_Widget *w, void *buttonData) {
-				((MainWindow*) buttonData)->buildScoreboardOutput(
-						((MainWindow*) buttonData)->scoreboardLevelChoice->value(),
-						((MainWindow*) buttonData)->scoreboardSortChoice->value());
-			}, ((MainWindow*) data));
+	((MainWindow*) data)->scoreboardLevelChoice->callback(cb_scoreboard_update,
+			((MainWindow*) data));
+	((MainWindow*) data)->scoreboardLevelChoice->value(0);
 
 	Fl_Box heading(125, 100, 50, 10, "Top 10:");
-	((MainWindow*) data)->scoresList = new Fl_Text_Display(75, 125, 150, 150,
-			"");
+	((MainWindow*) data)->scoresList = new Fl_Text_Display(75, 125, 150, 150, "");
 
 	Fl_Button resetButton(125, 290, 50, 30, "Reset");
 	resetButton.callback(
 			[](Fl_Widget *w, void *buttonData) {
 				delete ((MainWindow*) buttonData)->highScores;
-				((MainWindow*) buttonData)->highScores =
-						new PlaitedRecordList();
+				((MainWindow*) buttonData)->highScores = nullptr;
 
-				((MainWindow*) buttonData)->buildScoreboardOutput(
-										((MainWindow*) buttonData)->scoreboardLevelChoice->value(),
-										((MainWindow*) buttonData)->scoreboardSortChoice->value());
+				((MainWindow*) buttonData)->cb_scoreboard_update(w, buttonData);
 			}, ((MainWindow*) data));
 
 	((MainWindow*) data)->buildScoreboardOutput(
-					((MainWindow*) data)->scoreboardLevelChoice->value(),
-					((MainWindow*) data)->scoreboardSortChoice->value());
+			((MainWindow*) data)->scoreboardLevelChoice->value(),
+			((MainWindow*) data)->scoreboardSortChoice->value());
 
 	scoreboardWindow.add(((MainWindow*) data)->scoreboardSortChoice);
 	scoreboardWindow.add(((MainWindow*) data)->scoreboardLevelChoice);
@@ -248,43 +258,43 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or m
 }
 
 void MainWindow::cb_quit(Fl_Widget*, void *data) {
-	((MainWindow*) data)->cb_quit_i();
+((MainWindow*) data)->cb_quit_i();
 }
 
 void MainWindow::cb_quit_i() {
-	this->hide();
+this->hide();
 }
 
 void MainWindow::checkSaves() {
-	SaveHandler saver = SaveHandler();
+SaveHandler saver = SaveHandler();
 
-	this->saveChoice->clear();
-	this->saves = saver.getSaves();
-	for (string save : saver.getSaves()) {
-		this->saveChoice->add(save.c_str());
-	}
+this->saveChoice->clear();
+this->saves = saver.getSaves();
+for (string save : saver.getSaves()) {
+	this->saveChoice->add(save.c_str());
+}
 
 }
 
 void MainWindow::cb_continue(Fl_Widget*, void *data) {
-	int choice = ((MainWindow*) data)->saveChoice->value();
+int choice = ((MainWindow*) data)->saveChoice->value();
 
-	if (choice < 0) {
-		fl_message("%s", "Please select a  save to continue.");
-		return;
-	}
+if (choice < 0) {
+	fl_message("%s", "Please select a  save to continue.");
+	return;
+}
 
-	string puzzle = ((MainWindow*) data)->saves[choice];
+string puzzle = ((MainWindow*) data)->saves[choice];
 
-	GameWindow *window = new GameWindow(400, 400, puzzle.c_str(), puzzle);
-	window->setColors(
-			((MainWindow*) data)->colors[((MainWindow*) data)->settings[0]],
-			((MainWindow*) data)->colors[((MainWindow*) data)->settings[1]]);
+GameWindow *window = new GameWindow(400, 400, puzzle.c_str(), puzzle);
+window->setColors(
+		((MainWindow*) data)->colors[((MainWindow*) data)->settings[0]],
+		((MainWindow*) data)->colors[((MainWindow*) data)->settings[1]]);
 
-	window->set_modal();
-	window->show();
-	while (window->shown())
-		Fl::wait();
+window->set_modal();
+window->show();
+while (window->shown())
+	Fl::wait();
 }
 
 } /* namespace view */
