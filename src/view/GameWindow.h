@@ -78,6 +78,7 @@ private:
 
 	vector<Fl_Widget*> gameBoard;
 	static const int MINIMUM_SIZE = 300;
+	static const int MAXDIFFICULTY = 4;
 
 public:
 	/**

@@ -101,8 +101,8 @@ void GameWindow::buildDisplay(int width, int height) {
 }
 
 Fl_Fontsize GameWindow::calculateSizes(int width, int height) {
-	this->inputBoxWidth = (width / 4 * 3) / this->numberColumns;
-	this->inputBoxHeight = (height / 4 * 3) / this->numberRows;
+	this->inputBoxWidth = (width / MAXDIFFICULTY * 3) / this->numberColumns;
+	this->inputBoxHeight = (height / MAXDIFFICULTY * 3) / this->numberRows;
 
 	Fl_Fontsize inputBoxFontSize = 12;
 
@@ -247,7 +247,7 @@ void GameWindow::displayCompleteDialog() {
 	puzzleCompleteDialog.add(ok_button);
 
 	int stopPlayingX = 150;
-	if (this->difficulty >= 6) { // FIXME: Const number of puzzles
+	if (this->difficulty >= MAXDIFFICULTY) { // FIXME: Const number of puzzles
 		ok_button.hide();
 		stopPlayingX = 100;
 	}

@@ -20,7 +20,7 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	int itemWidth = 70;
 	int itemHeight = 30;
 
-	vector<string> difficulties = { "1", "2", "3", "4", "5", "6", "7" };
+	vector<string> difficulties = { "1", "2", "3", "4", "5" };
 	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
 
