@@ -117,4 +117,31 @@ PlaitedRecordList* SaveHandler::loadRecords() {
 	return records;
 }
 
+vector<string> SaveHandler::loadUserSettings() {
+	ifstream file(SETTINGS_FILE);
+	string line;
+	vector<string> settings;
+
+	while (getline(file, line)) {
+		istringstream ss(line);
+		string token;
+
+		while (getline(ss, token, ',')) {
+			settings.push_back(token);
+		}
+	}
+
+	return settings;
+}
+
+void SaveHandler::saveUserSettings(vector<string> settings) {
+	ofstream file(SETTINGS_FILE);
+	stringstream ss;
+	for (string setting : settings) {
+		ss << setting << ",";
+	}
+
+	file << ss.str();
+}
+
 } /* namespace datatier */

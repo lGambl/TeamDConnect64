@@ -45,7 +45,7 @@ vector<BoardNode*> BoardReader::splitByComma(const std::string &s) {
 	string token;
 
 	int count = 0;
-	while (std::getline(ss, token, ',')) {
+	while (getline(ss, token, ',')) {
 		if (count % 2) {
 			editables.push_back((bool) std::stoi(token));
 		} else {

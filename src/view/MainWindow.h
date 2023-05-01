@@ -44,10 +44,9 @@ private:
 	Fl_Choice *scoreboardSortChoice;
 
 	map<string, Fl_Color> colors;
-	string cellColor;
-	string textColor;
 
 	PlaitedRecordList *highScores;
+	vector<string> settings;
 
 public:
 	/**
@@ -85,6 +84,7 @@ private:
 	void saveRecords();
 
 	void playPuzzles(int difficulty);
+	void buildDisplay(int width, int height);
 };
 
 } /* namespace view */

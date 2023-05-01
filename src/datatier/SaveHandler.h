@@ -35,6 +35,7 @@ private:
 	Board* readSaveFile(string &fileName);
 
 	const char *RECORDS_FILE = "records.txt"; // FIXME: Move to utils const file
+	const char *SETTINGS_FILE = "settings.txt";
 	const char *DELIMITER = ",";
 	static const char LINE_DELIMETER = ',';
 	const char *PUZZLE_FILE_NAME = "Puzzle";
@@ -103,6 +104,26 @@ public:
 	 * @return PlaitedRecordList of high scores.
 	 */
 	PlaitedRecordList* loadRecords();
+
+	/**
+	 * Loads a list of user settings.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return The list of settings.
+	 */
+	vector<string> loadUserSettings();
+
+	/**
+	 * Save a list of user settings.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @param settings The list of settings to save.
+	 */
+	void saveUserSettings(vector<string> settings);
 };
 
 } /* namespace datatier */

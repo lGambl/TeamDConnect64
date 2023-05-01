@@ -9,51 +9,45 @@
 
 namespace view {
 
+void MainWindow::buildDisplay(int width, int height) {
+	int widthCentering = width / 2;
+	int heightCentering = height / 2;
+	int itemWidth = 70;
+	int itemHeight = 30;
+	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
+			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
+	for (int i = 1; i <= MAX_DIFFICULTY + 1; i++) {
+		string value = to_string(i);
+		this->puzzleChoice->add(value.c_str());
+	}
+	this->saveChoice = new Fl_Choice(widthCentering - itemWidth / 2,
+			heightCentering - 120, itemWidth, itemHeight, "Saves: ");
+	this->settingsButton = new Fl_Button(width - itemWidth - 10, 10, itemWidth,
+			itemHeight, "Settings");
+	this->settingsButton->callback(cb_settings, this);
+	this->continueGameButton = new Fl_Button(
+			widthCentering - (itemWidth + 50) / 2, heightCentering - 80,
+			itemWidth + 50, itemHeight, "Continue Game");
+	this->continueGameButton->callback(cb_continue, this);
+	this->playNewWindowButton = new Fl_Button(widthCentering - itemWidth / 2,
+			heightCentering + 5, itemWidth, itemHeight, "Play");
+	this->playNewWindowButton->callback(cb_play, this);
+	this->scoreboardButton = new Fl_Button(
+			widthCentering - (itemWidth + 20) / 2, heightCentering + 50,
+			itemWidth + 20, itemHeight, "Scoreboard");
+	this->scoreboardButton->callback(cb_scoreboard, this);
+	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
+			heightCentering + 100, itemWidth, itemHeight, "Quit");
+	this->quitButton->callback(cb_quit, this);
+	this->checkSaves();
+}
+
 MainWindow::MainWindow(int width, int height, const char *title) :
 		Fl_Window(width, height, title) {
 
 	this->begin();
 
-	int widthCentering = width / 2;
-	int heightCentering = height / 2;
-
-	int itemWidth = 70;
-	int itemHeight = 30;
-
-	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
-			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
-
-	for (int i = 1; i <= MAX_DIFFICULTY + 1; i++) {
-		string value = to_string(i);
-		this->puzzleChoice->add(value.c_str());
-	}
-
-	this->saveChoice = new Fl_Choice(widthCentering - itemWidth / 2,
-			heightCentering - 120, itemWidth, itemHeight, "Saves: ");
-
-	this->settingsButton = new Fl_Button(width - itemWidth - 10, 10, itemWidth,
-			itemHeight, "Settings");
-	this->settingsButton->callback(cb_settings, this);
-
-	this->continueGameButton = new Fl_Button(
-			widthCentering - (itemWidth + 50) / 2, heightCentering - 80,
-			itemWidth + 50, itemHeight, "Continue Game");
-	this->continueGameButton->callback(cb_continue, this);
-
-	this->playNewWindowButton = new Fl_Button(widthCentering - itemWidth / 2,
-			heightCentering + 5, itemWidth, itemHeight, "Play");
-	this->playNewWindowButton->callback(cb_play, this);
-
-	this->scoreboardButton = new Fl_Button(
-			widthCentering - (itemWidth + 20) / 2, heightCentering + 50,
-			itemWidth + 20, itemHeight, "Scoreboard");
-	this->scoreboardButton->callback(cb_scoreboard, this);
-
-	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
-			heightCentering + 100, itemWidth, itemHeight, "Quit");
-	this->quitButton->callback(cb_quit, this);
-
-	this->checkSaves();
+	this->buildDisplay(width, height);
 
 	this->end();
 	this->resizable(this);
@@ -64,9 +58,11 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	SaveHandler formatter;
 	this->highScores = formatter.loadRecords();
 
-	//FIXME: Load in colors
-	this->cellColor = "White";
-	this->textColor = "Black";
+	this->settings = formatter.loadUserSettings();
+	if (this->settings.size() == 0) {
+		this->settings.push_back("White");
+		this->settings.push_back("Black");
+	}
 }
 
 MainWindow::~MainWindow() {
@@ -92,14 +88,14 @@ void MainWindow::cb_settings(Fl_Widget*, void *data) {
 		colorStrings.push_back(it->first);
 	}
 
-	if (!((MainWindow*) data)->cellColor.empty()) {
+	if (!((MainWindow*) data)->settings[0].empty()) {
 		int index = distance(colors.begin(),
-				colors.find(((MainWindow*) data)->cellColor));
+				colors.find(((MainWindow*) data)->settings[0]));
 		cellColor.value(index);
 	}
-	if (!((MainWindow*) data)->textColor.empty()) {
+	if (!((MainWindow*) data)->settings[1].empty()) {
 		int index = distance(colors.begin(),
-				colors.find(((MainWindow*) data)->textColor));
+				colors.find(((MainWindow*) data)->settings[1]));
 		textColor.value(index);
 	}
 
@@ -110,15 +106,18 @@ void MainWindow::cb_settings(Fl_Widget*, void *data) {
 		Fl::wait();
 	}
 
-	((MainWindow*) data)->cellColor = colorStrings[cellColor.value()];
-	((MainWindow*) data)->textColor = colorStrings[textColor.value()];
-	//FIXME: Save out colors
+	((MainWindow*) data)->settings[0] = colorStrings[cellColor.value()];
+	((MainWindow*) data)->settings[1] = colorStrings[textColor.value()];
+
+	SaveHandler saver;
+	saver.saveUserSettings(((MainWindow*) data)->settings);
 }
 
 void MainWindow::playPuzzles(int difficulty) {
 	string title = "Puzzle " + to_string(difficulty + 1);
 	GameWindow *window = new GameWindow(400, 400, title.c_str(), difficulty);
-	window->setColors(this->colors[cellColor], this->colors[textColor]);
+	window->setColors(this->colors[this->settings[0]],
+			this->colors[this->settings[1]]);
 
 	window->set_modal();
 	window->show();
@@ -137,7 +136,8 @@ void MainWindow::playPuzzles(int difficulty) {
 			difficulty++;
 			title = "Puzzle " + to_string(difficulty + 1);
 			window = new GameWindow(400, 400, title.c_str(), difficulty);
-			window->setColors(this->colors[cellColor], this->colors[textColor]);
+			window->setColors(this->colors[this->settings[0]],
+					this->colors[this->settings[1]]);
 			window->set_modal();
 			window->show();
 		}
@@ -255,8 +255,8 @@ void MainWindow::cb_continue(Fl_Widget*, void *data) {
 
 	GameWindow *window = new GameWindow(400, 400, puzzle.c_str(), puzzle);
 	window->setColors(
-			((MainWindow*) data)->colors[((MainWindow*) data)->cellColor],
-			((MainWindow*) data)->colors[((MainWindow*) data)->textColor]);
+			((MainWindow*) data)->colors[((MainWindow*) data)->settings[0]],
+			((MainWindow*) data)->colors[((MainWindow*) data)->settings[1]]);
 
 	window->set_modal();
 	window->show();
