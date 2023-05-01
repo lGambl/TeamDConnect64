@@ -91,9 +91,10 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
+	 * @param level the level
 	 * @param records The high scores to save out.
 	 */
-	void saveRecords(PlaitedRecordList *records);
+	void saveRecords(PlaitedRecordList *records, int level);
 
 	/**
 	 * Loads a plaited list of records.
@@ -101,9 +102,20 @@ public:
 	 * @precondition none
 	 * @postcondition none
 	 *
+	 * @param level the level
 	 * @return PlaitedRecordList of high scores.
 	 */
-	PlaitedRecordList* loadRecords();
+	PlaitedRecordList* loadRecords(int level);
+
+	/**
+	 * Loads a plaited list of all records.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return PlaitedRecordList of high scores.
+	 */
+	PlaitedRecordList* loadAllRecords();
 
 	/**
 	 * Loads a list of user settings.

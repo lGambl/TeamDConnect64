@@ -83,16 +83,16 @@ Board* SaveHandler::readSaveFile(string &fileName) {
 	return board;
 }
 
-void SaveHandler::saveRecords(PlaitedRecordList *records) {
-	ofstream file(RECORDS_FILE);
+void SaveHandler::saveRecords(PlaitedRecordList *records, int level) {
+	ofstream file("records"+ to_string(level) +".txt");
 	string toSave = "";
 	getRecordsCSVOutput(records, toSave);
 
 	file << toSave;
 }
 
-PlaitedRecordList* SaveHandler::loadRecords() {
-	ifstream file(RECORDS_FILE);
+PlaitedRecordList* SaveHandler::loadRecords(int level) {
+	ifstream file("records"+ to_string(level) +".txt");
 	string line;
 	string playerName, puzzle, timestr;
 	PlaitedRecordList *records = new PlaitedRecordList();
@@ -115,6 +115,39 @@ PlaitedRecordList* SaveHandler::loadRecords() {
 	}
 
 	return records;
+}
+
+PlaitedRecordList* SaveHandler::loadAllRecords(){
+	PlaitedRecordList *records = new PlaitedRecordList();
+
+	vector<string> recordFiles;
+
+		DIR *dir;
+		struct dirent *ent;
+		if ((dir = opendir(".")) != NULL) {
+			/* print all the files and directories within directory */
+			while ((ent = readdir(dir)) != NULL) {
+				string file = ent->d_name;
+				if (file.find("records") != string::npos) {
+					recordFiles.push_back(file);
+				}
+			}
+			closedir(dir);
+		} else {
+			/* could not open directory */
+			perror("");
+		}
+
+		for(string recordsFile : recordFiles){
+			int level = stoi(recordsFile);
+			PlaitedRecordList* list = this->loadRecords(level);
+			for(RecordNode* node : list->getRecordsByTime(false)){
+				records->addRecord(node->getRecord());
+			}
+		}
+
+		return records;
+
 }
 
 vector<string> SaveHandler::loadUserSettings() {
