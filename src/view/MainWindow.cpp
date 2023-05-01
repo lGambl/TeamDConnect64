@@ -31,7 +31,8 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->saveChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 120, itemWidth, itemHeight, "Saves: ");
 
-	this->settingsButton = new Fl_Button(width - itemWidth - 10, 10, itemWidth, itemHeight, "Settings");
+	this->settingsButton = new Fl_Button(width - itemWidth - 10, 10, itemWidth,
+			itemHeight, "Settings");
 	this->settingsButton->callback(cb_settings, this);
 
 	this->continueGameButton = new Fl_Button(
@@ -58,6 +59,8 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->resizable(this);
 	this->show();
 
+	this->colors = getColors();
+
 	SaveHandler formatter;
 	this->highScores = formatter.loadRecords();
 
@@ -74,33 +77,36 @@ void MainWindow::saveRecords() {
 	formatter.saveRecords(this->highScores);
 }
 
-void MainWindow::cb_settings(Fl_Widget*, void* data) {
+void MainWindow::cb_settings(Fl_Widget*, void *data) {
 	Fl_Window window(250, 150, "Settings");
 
 	Fl_Choice cellColor(125, 25, 75, 30, "Cell Color:");
 	Fl_Choice textColor(125, 75, 75, 30, "Value Color:");
 
-	map<string, Fl_Color> colors = getColors();
+	map<string, Fl_Color> colors = ((MainWindow*) data)->colors;
 	vector<string> colorStrings;
-	for (map<string, Fl_Color>::iterator it = colors.begin(); it != colors.end(); ++it) {
+	for (map<string, Fl_Color>::iterator it = colors.begin();
+			it != colors.end(); ++it) {
 		cellColor.add(it->first.c_str());
 		textColor.add(it->first.c_str());
 		colorStrings.push_back(it->first);
 	}
 
 	if (!((MainWindow*) data)->cellColor.empty()) {
-		int index = distance(colors.begin(),colors.find(((MainWindow*) data)->cellColor));
+		int index = distance(colors.begin(),
+				colors.find(((MainWindow*) data)->cellColor));
 		cellColor.value(index);
 	}
 	if (!((MainWindow*) data)->textColor.empty()) {
-		int index = distance(colors.begin(),colors.find(((MainWindow*) data)->textColor));
+		int index = distance(colors.begin(),
+				colors.find(((MainWindow*) data)->textColor));
 		textColor.value(index);
 	}
 
 	window.set_modal();
 	window.show();
 
-	while(window.shown()) {
+	while (window.shown()) {
 		Fl::wait();
 	}
 
@@ -110,12 +116,9 @@ void MainWindow::cb_settings(Fl_Widget*, void* data) {
 }
 
 void MainWindow::playPuzzles(int difficulty) {
-	map<string, Fl_Color> colors = getColors();
-
 	string title = "Puzzle " + to_string(difficulty + 1);
 	GameWindow *window = new GameWindow(400, 400, title.c_str(), difficulty);
-	cout << colors[cellColor] << " : " << colors[textColor] << endl;
-	window->setColors(colors[cellColor], colors[textColor]);
+	window->setColors(this->colors[cellColor], this->colors[textColor]);
 
 	window->set_modal();
 	window->show();
@@ -134,7 +137,7 @@ void MainWindow::playPuzzles(int difficulty) {
 			difficulty++;
 			title = "Puzzle " + to_string(difficulty + 1);
 			window = new GameWindow(400, 400, title.c_str(), difficulty);
-			window->setColors(colors[cellColor], colors[textColor]);
+			window->setColors(this->colors[cellColor], this->colors[textColor]);
 			window->set_modal();
 			window->show();
 		}
@@ -251,6 +254,10 @@ void MainWindow::cb_continue(Fl_Widget*, void *data) {
 	string puzzle = ((MainWindow*) data)->saves[choice];
 
 	GameWindow *window = new GameWindow(400, 400, puzzle.c_str(), puzzle);
+	window->setColors(
+			((MainWindow*) data)->colors[((MainWindow*) data)->cellColor],
+			((MainWindow*) data)->colors[((MainWindow*) data)->textColor]);
+
 	window->set_modal();
 	window->show();
 	while (window->shown())

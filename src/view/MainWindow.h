@@ -43,6 +43,7 @@ private:
 	Fl_Text_Display *scoresList;
 	Fl_Choice *scoreboardSortChoice;
 
+	map<string, Fl_Color> colors;
 	string cellColor;
 	string textColor;
 
