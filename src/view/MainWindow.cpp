@@ -20,12 +20,12 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	int itemWidth = 70;
 	int itemHeight = 30;
 
-	vector<string> difficulties = { "1", "2", "3", "4", "5" };
 	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
 
-	for (string current : difficulties) {
-		this->puzzleChoice->add(current.c_str());
+	for (int i = 1; i <= MAX_DIFFICULTY + 1; i++) {
+		string value = to_string(i);
+		this->puzzleChoice->add(value.c_str());
 	}
 
 	this->saveChoice = new Fl_Choice(widthCentering - itemWidth / 2,
@@ -34,11 +34,11 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->continueGameButton = new Fl_Button(
 			widthCentering - (itemWidth + 50) / 2, heightCentering - 80,
 			itemWidth + 50, itemHeight, "Continue Game");
-	this->continueGameButton->callback(cb_showContinue, this);
+	this->continueGameButton->callback(cb_continue, this);
 
 	this->playNewWindowButton = new Fl_Button(widthCentering - itemWidth / 2,
 			heightCentering + 5, itemWidth, itemHeight, "Play");
-	this->playNewWindowButton->callback(cb_show, this);
+	this->playNewWindowButton->callback(cb_play, this);
 
 	this->scoreboardButton = new Fl_Button(
 			widthCentering - (itemWidth + 20) / 2, heightCentering + 50,
@@ -67,7 +67,34 @@ void MainWindow::saveRecords() {
 	formatter.saveRecords(this->highScores);
 }
 
-void MainWindow::cb_show(Fl_Widget *o, void *data) {
+void MainWindow::playPuzzles(int difficulty) {
+	string title = "Puzzle " + to_string(difficulty + 1);
+	GameWindow *window = new GameWindow(400, 400, title.c_str(), difficulty);
+
+	window->set_modal();
+	window->show();
+
+	while (window->shown()) {
+		Fl::wait();
+
+		if (window->isComplete()
+				&& !window->getGameScore()->getPlayerName().empty()) {
+
+			this->highScores->addRecord(window->getGameScore());
+			this->saveRecords();
+		}
+
+		if (window->nextGame() && !window->shown()) {
+			difficulty++;
+			title = "Puzzle " + to_string(difficulty + 1);
+			window = new GameWindow(400, 400, title.c_str(), difficulty);
+			window->set_modal();
+			window->show();
+		}
+	}
+}
+
+void MainWindow::cb_play(Fl_Widget *o, void *data) {
 
 	int difficulty = ((MainWindow*) data)->puzzleChoice->value();
 
@@ -76,43 +103,15 @@ void MainWindow::cb_show(Fl_Widget *o, void *data) {
 		return;
 	}
 
-	string title = "Puzzle "
-			+ toString(difficulty + 1, "Difficuly must be a number.");
-
-	GameWindow *window = new GameWindow(400, 400, title.c_str(), difficulty);
-	window->set_modal();
-	window->show();
-	while (window->shown()) {
-		Fl::wait();
-
-		if (window->isComplete()
-				&& !window->getGameScore()->getPlayerName().empty()) {
-			((MainWindow*) data)->highScores->addRecord(window->getGameScore());
-
-			((MainWindow*) data)->saveRecords();
-		}
-
-		if (window->nextGame() && !window->shown()) {
-			difficulty++;
-			string title = "Puzzle "
-					+ toString(difficulty + 1, "Difficuly must be a number.");
-			window = new GameWindow(400, 400, title.c_str(), difficulty);
-			window->set_modal();
-			window->show();
-		}
-	}
-
+	((MainWindow*) data)->playPuzzles(difficulty);
 	((MainWindow*) data)->checkSaves();
 	((MainWindow*) data)->saveChoice->value(-1);
 }
 
 void MainWindow::buildOutput(void *data, int sort) {
-	// FIXME: allow selection of sort method and direction.
 	Fl_Text_Buffer *scoresBuffer = new Fl_Text_Buffer();
 
-	RecordOutputter formatter;
-	string output = formatter.getRecordsOutput(
-			((MainWindow*) (data))->highScores, sort);
+	string output = getRecordsOutput(((MainWindow*) (data))->highScores, sort);
 
 	scoresBuffer->text(output.c_str());
 
@@ -120,7 +119,7 @@ void MainWindow::buildOutput(void *data, int sort) {
 	this->saveRecords();
 }
 
-void MainWindow::cb_scoreboard(Fl_Widget*, void *data) {
+void MainWindow::cb_scoreboard(Fl_Widget*, void *data) { // FIXME: Refactor or make its own class
 	Fl_Window scoreboardWindow(300, 350, "High Scoreboard");
 
 	((MainWindow*) data)->scoreboardSortChoice = new Fl_Choice(125, 15, 100, 30,
@@ -135,10 +134,10 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) {
 	((MainWindow*) data)->scoreboardSortChoice->value(1);
 	((MainWindow*) data)->scoreboardSortChoice->callback(
 			[](Fl_Widget *w, void *buttonData) {
-							((MainWindow*) buttonData)->buildOutput(
-									((MainWindow*) buttonData),
-									((MainWindow*) buttonData)->scoreboardSortChoice->value());
-						}, ((MainWindow*) data));
+				((MainWindow*) buttonData)->buildOutput(
+						((MainWindow*) buttonData),
+						((MainWindow*) buttonData)->scoreboardSortChoice->value());
+			}, ((MainWindow*) data));
 
 	Fl_Choice puzzleOptions(125, 50, 100, 30, "Puzzle: ");
 
@@ -194,7 +193,7 @@ void MainWindow::checkSaves() {
 
 }
 
-void MainWindow::cb_showContinue(Fl_Widget*, void *data) {
+void MainWindow::cb_continue(Fl_Widget*, void *data) {
 	int choice = ((MainWindow*) data)->saveChoice->value();
 
 	if (choice < 0) {

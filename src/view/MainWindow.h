@@ -30,6 +30,8 @@ namespace view {
  */
 class MainWindow: public Fl_Window {
 private:
+	static const int MAX_DIFFICULTY = 4;
+
 	vector<string> saves;
 	Fl_Choice *puzzleChoice;
 	Fl_Choice *saveChoice;
@@ -62,8 +64,8 @@ public:
 
 private:
 	static void cb_scoreboard(Fl_Widget*, void*);
-	static void cb_show(Fl_Widget*, void*);
-	static void cb_showContinue(Fl_Widget*, void*);
+	static void cb_play(Fl_Widget*, void*);
+	static void cb_continue(Fl_Widget*, void*);
 
 	static void cb_quit(Fl_Widget*, void*);
 	inline void cb_quit_i();
@@ -71,9 +73,12 @@ private:
 	void checkSaves();
 
 	void updateInputDisplay(const char *text);
+
 	void buildOutput(void *data, int sort);
-	void saveRecords(const utils::RecordOutputter &formatter, void *data);
+
 	void saveRecords();
+
+	void playPuzzles(int difficulty);
 };
 
 } /* namespace view */

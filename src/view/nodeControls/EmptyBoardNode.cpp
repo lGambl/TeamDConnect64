@@ -9,18 +9,27 @@
 
 namespace view {
 
-EmptyBoardNode::EmptyBoardNode(int x, int y, int width, int height, const char *tag,
-		int maxNumber, BoardNode *node) :
+EmptyBoardNode::EmptyBoardNode(int x, int y, int width, int height,
+		const char *tag, int maxNumber, BoardNode *node) :
 		Fl_Int_Input(x, y, width, height, tag) {
 	this->node = node;
 	this->maxNumber = maxNumber;
 
 	if (this->node->getNumber() >= 1) {
-		this->value(toString(this->node->getNumber(), "Node value is not a number").c_str());
+		this->value(to_string(this->node->getNumber()).c_str());
 	}
 }
 
 EmptyBoardNode::~EmptyBoardNode() {
+}
+
+void EmptyBoardNode::updateNodeValue(const string &valueString) {
+	int value = toInt(valueString, "Please enter a positive number.");
+	if (value > this->maxNumber || value < MIN_VALUE) {
+		this->valueOutOfBounds();
+	} else {
+		this->node->setNumber(value);
+	}
 }
 
 int EmptyBoardNode::handle(int e) {
@@ -33,14 +42,7 @@ int EmptyBoardNode::handle(int e) {
 				break;
 			}
 
-			int value = toInt(valueString, "Please enter a positive number.");
-
-			if (value > this->maxNumber || value < 1) {
-				this->valueOutOfBounds();
-			} else {
-				this->node->setNumber(value);
-				ret = 1;
-			}
+			this->updateNodeValue(valueString);
 
 			break;
 		} catch (const char *message) {
@@ -56,12 +58,11 @@ int EmptyBoardNode::handle(int e) {
 
 void EmptyBoardNode::valueOutOfBounds() {
 	if (this->node->getNumber() >= 1) {
-		this->value(
-				toString(this->node->getNumber(), "Input must be a number.").c_str());
+		this->value(to_string(this->node->getNumber()).c_str());
 	} else {
 		this->value("");
 	}
-	string max = toString(this->maxNumber, "Input must be a number.");
+	string max = to_string(this->maxNumber);
 	string error = "Number must be between 1 and " + max + ".";
 	throw std::invalid_argument(error);
 }

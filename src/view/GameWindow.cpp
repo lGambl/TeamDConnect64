@@ -26,13 +26,12 @@ GameWindow::GameWindow(int width, int height, const char *title, int difficulty)
 	this->difficulty = difficulty;
 
 	this->nodes = this->board->getNodes();
-	this->timerCount = 0;
 
-	this->puzzleTitle = "Puzzle " + toString(difficulty + 1, "Difficuly must be a number.");
+	this->puzzleTitle = "Puzzle " + to_string(difficulty + 1);
 	this->buildDisplay(width, height);
 }
 
-GameWindow::GameWindow(int width, int height, const char *title, string& save) :
+GameWindow::GameWindow(int width, int height, const char *title, string &save) :
 		Fl_Window(width, height, title) {
 	if (width < MINIMUM_SIZE) {
 		throw std::invalid_argument(
@@ -48,7 +47,6 @@ GameWindow::GameWindow(int width, int height, const char *title, string& save) :
 
 	this->board = saver.loadSave(save);
 	this->nodes = this->board->getNodes();
-	this->timerCount = this->board->getTimer();
 
 	this->puzzleTitle = save;
 	this->buildDisplay(width, height);
@@ -78,21 +76,27 @@ void GameWindow::buildDisplay(int width, int height) {
 	this->timerOutput->align(FL_ALIGN_CENTER);
 
 	this->closeButton = new Fl_Button(
-			this->middleX - this->otherObjectsWidth * 2 - 5, this->bottomButtonY,
-			this->otherObjectsWidth, this->otherObjectsHeight, "Close");
+			this->middleX - this->otherObjectsWidth * 2 - 5,
+			this->bottomButtonY, this->otherObjectsWidth,
+			this->otherObjectsHeight, "Close");
 	this->closeButton->callback(cb_close, this);
 
-	this->checkButton = new Fl_Button(this->middleX - this->otherObjectsWidth / 2 - 15, this->bottomButtonY,
-			this->otherObjectsWidth, this->otherObjectsHeight, "Check");
+	this->checkButton = new Fl_Button(
+			this->middleX - this->otherObjectsWidth / 2 - 15,
+			this->bottomButtonY, this->otherObjectsWidth,
+			this->otherObjectsHeight, "Check");
 	this->checkButton->callback(cb_check, this);
 
-	this->pauseButton = new Fl_Button(this->middleX + this->otherObjectsWidth / 2 + 15, this->bottomButtonY,
-				this->otherObjectsWidth, this->otherObjectsHeight, "Pause");
-		this->pauseButton->callback(cb_pause, this);
+	this->pauseButton = new Fl_Button(
+			this->middleX + this->otherObjectsWidth / 2 + 15,
+			this->bottomButtonY, this->otherObjectsWidth,
+			this->otherObjectsHeight, "Pause");
+	this->pauseButton->callback(cb_pause, this);
 
 	this->resetButton = new Fl_Button(
-			this->middleX + this->otherObjectsWidth * 2 + 5, this->bottomButtonY,
-			this->otherObjectsWidth, this->otherObjectsHeight, "Reset");
+			this->middleX + this->otherObjectsWidth * 2 + 5,
+			this->bottomButtonY, this->otherObjectsWidth,
+			this->otherObjectsHeight, "Reset");
 	this->resetButton->callback(cb_reset, this);
 
 	this->end();
@@ -101,8 +105,8 @@ void GameWindow::buildDisplay(int width, int height) {
 }
 
 Fl_Fontsize GameWindow::calculateSizes(int width, int height) {
-	this->inputBoxWidth = (width / MAXDIFFICULTY * 3) / this->numberColumns;
-	this->inputBoxHeight = (height / MAXDIFFICULTY * 3) / this->numberRows;
+	this->inputBoxWidth = (width / 4 * 3) / this->numberColumns;
+	this->inputBoxHeight = (height / 4 * 3) / this->numberRows;
 
 	Fl_Fontsize inputBoxFontSize = 12;
 
@@ -142,8 +146,9 @@ void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 				newControl = new ExistingBoardNode(inputX, inputY,
 						this->inputBoxWidth, this->inputBoxHeight, newNode);
 			} else {
-				newControl = new EmptyBoardNode(inputX, inputY, this->inputBoxWidth,
-						this->inputBoxHeight, "", maxNumber, newNode);
+				newControl = new EmptyBoardNode(inputX, inputY,
+						this->inputBoxWidth, this->inputBoxHeight, "",
+						maxNumber, newNode);
 			}
 
 			this->gameBoard.push_back(newControl);
@@ -173,10 +178,10 @@ PlayerRecord* GameWindow::getGameScore() {
 }
 
 void GameWindow::timer_update() {
-	this->board->setTimer(timerCount);
+	this->board->setTimer(this->board->getTimer() + 1);
 
-	int minutes = this->timerCount / 60;
-	int seconds = this->timerCount % 60;
+	int minutes = this->board->getTimer() / 60;
+	int seconds = this->board->getTimer() % 60;
 
 	stringstream ss;
 	ss << setw(2) << setfill('0') << seconds;
@@ -190,8 +195,7 @@ void GameWindow::timer_update() {
 	this->timerOutput->value(timerOutputString.c_str());
 }
 
-void GameWindow::cb_timer(void* data) {
-	((GameWindow*) data)->timerCount++;
+void GameWindow::cb_timer(void *data) {
 	((GameWindow*) data)->timer_update();
 
 	if (!((GameWindow*) data)->pause) {
@@ -199,14 +203,13 @@ void GameWindow::cb_timer(void* data) {
 	}
 }
 
-void GameWindow::cb_pause(Fl_Widget*, void *data) {
-	Fl_Window* pauseDialog = new Fl_Window(300, 250,
-				"Puzzle Paused");
+void GameWindow::cb_pause(Fl_Widget*, void *data) { // FIXME: Refactor or make its own class
+	Fl_Window *pauseDialog = new Fl_Window(300, 250, "Puzzle Paused");
 
 	Fl_Button ok_button(75, 95, 150, 30, "Continue Puzzle");
 	ok_button.callback([](Fl_Widget *w, void *buttonData) {
 		((Fl_Window*) buttonData)->hide();
-	} , pauseDialog);
+	}, pauseDialog);
 
 	pauseDialog->set_modal();
 	pauseDialog->show();
@@ -227,12 +230,11 @@ void GameWindow::cb_close(Fl_Widget*, void *data) {
 
 void GameWindow::saveGame() {
 	SaveHandler saver = SaveHandler();
-	saver.saveGame(this->puzzleTitle, this->nodes, this->timerCount);
+	saver.saveGame(this->puzzleTitle, this->nodes, this->board->getTimer());
 }
 
-void GameWindow::displayCompleteDialog() {
-	Fl_Window puzzleCompleteDialog(300, 150,
-			"Puzzle Complete");
+void GameWindow::displayCompleteDialog() { // FIXME: Refactor or make its own class
+	Fl_Window puzzleCompleteDialog(300, 150, "Puzzle Complete");
 
 	Fl_Box heading(125, 25, 50, 10, "Great job!!");
 
@@ -242,12 +244,12 @@ void GameWindow::displayCompleteDialog() {
 	ok_button.callback([](Fl_Widget *w, void *buttonData) {
 		*((bool*) (buttonData)) = true;
 		((Fl_Window*) (w->parent()))->hide();
-	} , &result);
+	}, &result);
 
 	puzzleCompleteDialog.add(ok_button);
 
 	int stopPlayingX = 150;
-	if (this->difficulty >= MAXDIFFICULTY) { // FIXME: Const number of puzzles
+	if (this->difficulty >= MAX_DIFFICULTY) {
 		ok_button.hide();
 		stopPlayingX = 100;
 	}
@@ -256,13 +258,14 @@ void GameWindow::displayCompleteDialog() {
 	cancel_button.callback([](Fl_Widget *w, void *buttonData) {
 		*((bool*) (buttonData)) = false;
 		((Fl_Window*) (w->parent()))->hide();
-	} , &result);
+	}, &result);
 
 	puzzleCompleteDialog.add(cancel_button);
 	puzzleCompleteDialog.set_modal();
 	puzzleCompleteDialog.show();
 
 	while (puzzleCompleteDialog.shown()) {
+		this->pause = true;
 		Fl::wait();
 	}
 
@@ -273,7 +276,7 @@ void GameWindow::displayCompleteDialog() {
 	}
 }
 
-string GameWindow::displayUsernameDialog() {
+string GameWindow::displayUsernameDialog() { // FIXME: Refactor or make its own class
 	Fl_Window usernameDialog(300, 100, "Enter Username");
 	Fl_Input input(100, 50, 100, 25, "Username:");
 	Fl_Box message(100, 20, 100, 25, "Please enter a username below.");
@@ -286,7 +289,7 @@ string GameWindow::displayUsernameDialog() {
 		Fl_Input *input = (Fl_Input*) (window->child(0));
 		*((string*) ((buttonData))) = input->value();
 		window->hide();
-	} , &username);
+	}, &username);
 
 	usernameDialog.add(input);
 	usernameDialog.add(message);
@@ -302,17 +305,17 @@ string GameWindow::displayUsernameDialog() {
 }
 
 void GameWindow::cb_check(Fl_Widget*, void *data) {
-	GameWindow* gameData = ((GameWindow*) data);
+	GameWindow *gameData = ((GameWindow*) data);
 	if (gameData->board->isSolved()) {
 		((GameWindow*) data)->displayCompleteDialog();
 
 		string username = gameData->displayUsernameDialog();
 
-		gameData->playerRecord = new PlayerRecord(gameData->puzzleTitle, username,gameData->timerCount);
+		gameData->playerRecord = new PlayerRecord(gameData->puzzleTitle,
+				username, gameData->board->getTimer());
 
 		gameData->complete = true;
-	}
-	else {
+	} else {
 		fl_message("%s", "Puzzle incomplete!");
 	}
 }
@@ -320,12 +323,10 @@ void GameWindow::cb_check(Fl_Widget*, void *data) {
 void GameWindow::cb_reset(Fl_Widget*, void *data) {
 	vector<Fl_Widget*> widgets = ((GameWindow*) data)->gameBoard;
 
-	((GameWindow*) data)->timerCount = 0;
 	((GameWindow*) data)->board->setTimer(0);
 
-
-	for (Fl_Widget* current : widgets) {
-		if (EmptyBoardNode* newValue = dynamic_cast<EmptyBoardNode*>(current)) {
+	for (Fl_Widget *current : widgets) {
+		if (EmptyBoardNode *newValue = dynamic_cast<EmptyBoardNode*>(current)) {
 			newValue->reset();
 		}
 	}

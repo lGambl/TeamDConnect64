@@ -27,10 +27,14 @@ namespace view {
 
 class EmptyBoardNode: public Fl_Int_Input {
 private:
+	static const int MIN_VALUE = 1;
+
 	BoardNode *node;
 	int maxNumber;
 
 	void valueOutOfBounds();
+	void updateNodeValue(const std::string &valueString);
+
 public:
 	/**
 	 * Initializes an existing node control.
@@ -45,7 +49,8 @@ public:
 	 * @param tag The tag for the input box.
 	 * @param node The node the control refers to.
 	 */
-	EmptyBoardNode(int x, int y, int width, int height, const char *tag, int maxNumber, BoardNode *node);
+	EmptyBoardNode(int x, int y, int width, int height, const char *tag,
+			int maxNumber, BoardNode *node);
 
 	/**
 	 * Deconstructor for the existing node control.

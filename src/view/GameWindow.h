@@ -38,6 +38,9 @@ namespace view {
 
 class GameWindow: public Fl_Window {
 private:
+	static const int MINIMUM_SIZE = 300;
+	static const int MAX_DIFFICULTY = 4;
+
 	Fl_Output *timerOutput;
 	Fl_Button *closeButton;
 	Fl_Button *checkButton;
@@ -65,20 +68,17 @@ private:
 	int timerY;
 
 	int difficulty;
-	int timerCount;
 
 	bool result;
 	bool pause;
 	bool complete;
 
-	Board* board;
+	Board *board;
 	vector<BoardNode*> nodes;
 
-	PlayerRecord* playerRecord;
+	PlayerRecord *playerRecord;
 
 	vector<Fl_Widget*> gameBoard;
-	static const int MINIMUM_SIZE = 300;
-	static const int MAXDIFFICULTY = 4;
 
 public:
 	/**
@@ -93,7 +93,7 @@ public:
 	 */
 	GameWindow(int width, int height, const char *title, int difficulty);
 
-	GameWindow(int width, int height, const char *title, string& save);
+	GameWindow(int width, int height, const char *title, string &save);
 
 	/**
 	 * Deconstructor for the game window display.
