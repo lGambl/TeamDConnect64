@@ -62,8 +62,8 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->highScores = formatter.loadRecords();
 
 	//FIXME: Load in colors
-	this->cellColor = "";
-	this->textColor = "";
+	this->cellColor = "White";
+	this->textColor = "Black";
 }
 
 MainWindow::~MainWindow() {
