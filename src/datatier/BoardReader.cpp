@@ -18,7 +18,8 @@ BoardReader::~BoardReader() {
 }
 
 vector<BoardNode*> BoardReader::readNodeFile(int difficulty) {
-	ifstream infile(BOARDSFILE);
+	string filepath = getCWD() + BOARDSFILE;
+	ifstream infile(filepath.c_str());
 	if (!infile) {
 		throw invalid_argument("\nFile does not exist\n");
 	}

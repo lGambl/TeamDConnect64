@@ -10,8 +10,10 @@
 
 #include <FL/Fl.H>
 
+#include <unistd.h>
 #include <map>
 #include <string>
+#include <iostream>
 using namespace std;
 
 /**
@@ -29,6 +31,16 @@ using namespace std;
  */
 int toInt(const string &text, const char *errorMessage);
 
+/**
+ * Getts a map of strings to colors.
+ *
+ * @precondition none
+ * @postcondition none
+ *
+ * @return A map of strings and colors.
+ */
 map<string, Fl_Color> getColors();
+
+string getCWD();
 
 #endif /* UTILS_UTILS_H_ */

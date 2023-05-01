@@ -40,3 +40,19 @@ map<string, Fl_Color> getColors() {
 
 	return colorMap;
 }
+
+string getCWD() {
+	char cwd[1024];
+	if (getcwd(cwd, sizeof(cwd)) != nullptr) {
+		string directory = string(cwd);
+
+		string::size_type index = directory.find("Debug");
+		if (index < directory.size() && index > 0) {
+			directory.erase(index, directory.size());
+		}
+
+	    return directory;
+	} else {
+		return "./";
+	}
+}

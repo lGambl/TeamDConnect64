@@ -18,7 +18,7 @@ SaveHandler::~SaveHandler() {
 }
 
 Board* SaveHandler::loadSave(string &fileName) {
-	string filePath = SAVES_DIRECTORY + fileName;
+	string filePath = getCWD() + SAVES_DIRECTORY + fileName;
 	Board *board = this->readSaveFile(filePath);
 	remove(filePath.c_str());
 	return board;
@@ -26,7 +26,7 @@ Board* SaveHandler::loadSave(string &fileName) {
 
 void SaveHandler::saveGame(string &fileName, vector<BoardNode*> nodes,
 		int time) {
-	ofstream file(SAVES_DIRECTORY + fileName);
+	ofstream file(getCWD() + SAVES_DIRECTORY + fileName);
 	string toSave = "";
 
 	toSave += to_string(time) + "\n";
@@ -43,7 +43,7 @@ vector<string> SaveHandler::getSaves() {
 
 	DIR *dir;
 	struct dirent *ent;
-	if ((dir = opendir(SAVES_DIRECTORY)) != NULL) {
+	if ((dir = opendir((getCWD() + SAVES_DIRECTORY).c_str())) != NULL) {
 		/* print all the files and directories within directory */
 		while ((ent = readdir(dir)) != NULL) {
 			string file = ent->d_name;
@@ -85,7 +85,7 @@ Board* SaveHandler::readSaveFile(string &fileName) {
 }
 
 void SaveHandler::saveRecords(PlaitedRecordList *records, int level) {
-	string filePath = RECORD_FILE_NAME + to_string(level) + ".txt";
+	string filePath = getCWD() + RECORD_FILE_NAME + to_string(level) + ".txt";
 	ofstream file(filePath.c_str());
 	string toSave = "";
 	getRecordsCSVOutput(records, toSave);
@@ -94,7 +94,7 @@ void SaveHandler::saveRecords(PlaitedRecordList *records, int level) {
 }
 
 PlaitedRecordList* SaveHandler::loadRecords(int level) {
-	string filePath = RECORD_FILE_NAME + to_string(level) + ".txt";
+	string filePath = getCWD() + RECORD_FILE_NAME + to_string(level) + ".txt";
 	ifstream file(filePath.c_str());
 	string line;
 	string playerName, puzzle, timestr;
@@ -127,7 +127,7 @@ PlaitedRecordList* SaveHandler::loadAllRecords() {
 
 	DIR *dir;
 	struct dirent *ent;
-	if ((dir = opendir(RECORDS_DIRECTORY)) != NULL) {
+	if ((dir = opendir((getCWD() + RECORDS_DIRECTORY).c_str())) != NULL) {
 		/* print all the files and directories within directory */
 		while ((ent = readdir(dir)) != NULL) {
 			string file = ent->d_name;
@@ -163,7 +163,8 @@ PlaitedRecordList* SaveHandler::loadAllRecords() {
 }
 
 vector<string> SaveHandler::loadUserSettings() {
-	ifstream file(SETTINGS_FILE);
+	string filePath = getCWD() + SETTINGS_FILE;
+	ifstream file(filePath.c_str());
 	string line;
 	vector<string> settings;
 
@@ -180,7 +181,8 @@ vector<string> SaveHandler::loadUserSettings() {
 }
 
 void SaveHandler::saveUserSettings(vector<string> settings) {
-	ofstream file(SETTINGS_FILE);
+	string filePath = getCWD() + SETTINGS_FILE;
+	ofstream file(filePath.c_str());
 	stringstream ss;
 	for (string setting : settings) {
 		ss << setting << ",";
