@@ -20,7 +20,7 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	int itemWidth = 70;
 	int itemHeight = 30;
 
-	vector<string> difficulties = { "1", "2", "3", "4", "5", "6", "7" }; // FIXME: Populate
+	vector<string> difficulties = { "1", "2", "3", "4", "5", "6", "7" };
 	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
 
@@ -31,16 +31,18 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->saveChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 120, itemWidth, itemHeight, "Saves: ");
 
-	this->continueGameButton = new Fl_Button(widthCentering - (itemWidth + 50) / 2,
-			heightCentering - 80, itemWidth + 50, itemHeight, "Continue Game");
+	this->continueGameButton = new Fl_Button(
+			widthCentering - (itemWidth + 50) / 2, heightCentering - 80,
+			itemWidth + 50, itemHeight, "Continue Game");
 	this->continueGameButton->callback(cb_showContinue, this);
 
 	this->playNewWindowButton = new Fl_Button(widthCentering - itemWidth / 2,
 			heightCentering + 5, itemWidth, itemHeight, "Play");
 	this->playNewWindowButton->callback(cb_show, this);
 
-	this->scoreboardButton = new Fl_Button(widthCentering - (itemWidth + 20) / 2,
-				heightCentering + 50, itemWidth + 20, itemHeight, "Scoreboard");
+	this->scoreboardButton = new Fl_Button(
+			widthCentering - (itemWidth + 20) / 2, heightCentering + 50,
+			itemWidth + 20, itemHeight, "Scoreboard");
 	this->scoreboardButton->callback(cb_scoreboard, this);
 
 	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
@@ -52,9 +54,17 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->end();
 	this->resizable(this);
 	this->show();
+
+	SaveHandler formatter;
+	this->highScores = formatter.loadRecords();
 }
 
 MainWindow::~MainWindow() {
+}
+
+void MainWindow::saveRecords() {
+	SaveHandler formatter;
+	formatter.saveRecords(this->highScores);
 }
 
 void MainWindow::cb_show(Fl_Widget *o, void *data) {
@@ -66,7 +76,8 @@ void MainWindow::cb_show(Fl_Widget *o, void *data) {
 		return;
 	}
 
-	string title = "Puzzle " + toString(difficulty + 1, "Difficuly must be a number.");
+	string title = "Puzzle "
+			+ toString(difficulty + 1, "Difficuly must be a number.");
 
 	GameWindow *window = new GameWindow(400, 400, title.c_str(), difficulty);
 	window->set_modal();
@@ -74,13 +85,17 @@ void MainWindow::cb_show(Fl_Widget *o, void *data) {
 	while (window->shown()) {
 		Fl::wait();
 
-		if (window->isComplete() && !window->getGameScore()->getPlayerName().empty()) {
-			((MainWindow*) data)->highScores.addRecord(window->getGameScore());
+		if (window->isComplete()
+				&& !window->getGameScore()->getPlayerName().empty()) {
+			((MainWindow*) data)->highScores->addRecord(window->getGameScore());
+
+			((MainWindow*) data)->saveRecords();
 		}
 
 		if (window->nextGame() && !window->shown()) {
 			difficulty++;
-			string title = "Puzzle " + toString(difficulty + 1, "Difficuly must be a number.");
+			string title = "Puzzle "
+					+ toString(difficulty + 1, "Difficuly must be a number.");
 			window = new GameWindow(400, 400, title.c_str(), difficulty);
 			window->set_modal();
 			window->show();
@@ -91,29 +106,71 @@ void MainWindow::cb_show(Fl_Widget *o, void *data) {
 	((MainWindow*) data)->saveChoice->value(-1);
 }
 
+void MainWindow::buildOutput(void *data, int sort) {
+	// FIXME: allow selection of sort method and direction.
+	Fl_Text_Buffer *scoresBuffer = new Fl_Text_Buffer();
+
+	RecordOutputter formatter;
+	string output = formatter.getRecordsOutput(
+			((MainWindow*) (data))->highScores, sort);
+
+	scoresBuffer->text(output.c_str());
+
+	this->scoresList->buffer(scoresBuffer);
+	this->saveRecords();
+}
+
 void MainWindow::cb_scoreboard(Fl_Widget*, void *data) {
-	Fl_Window scoreboard(300, 250, "High Scoreboard");
-	Fl_Box heading(125, 10, 50, 10, "Top 10:");
+	Fl_Window scoreboardWindow(300, 350, "High Scoreboard");
 
-	vector<PlayerRecord> scores = ((MainWindow*) data)->highScores.getRecordsByPlayerName(true); // FIXME: allow selection of sort method and direction.
+	((MainWindow*) data)->scoreboardSortChoice = new Fl_Choice(125, 15, 100, 30,
+			"Sort: ");
 
-	vector<string> entries;
-	int y = 35;
-	for (vector<PlayerRecord>::size_type i = 0; i < scores.size(); i++) {
-
-		PlayerRecord record = scores[i];
-
-		entries.push_back(record.getEntry());
-		Fl_Box *player_score = new Fl_Box(125, y, 50, 10, entries[i].c_str());
-		scoreboard.add(player_score);
-
-		y += 20;
+	vector<string> sorts = { "Time Ascending", "Time Descending",
+			"Name Ascending", "Name Descending", "Level Ascending",
+			"Level Descending" };
+	for (vector<string>::size_type i = 0; i < sorts.size(); i++) {
+		((MainWindow*) data)->scoreboardSortChoice->add(sorts[i].c_str());
 	}
+	((MainWindow*) data)->scoreboardSortChoice->value(1);
+	((MainWindow*) data)->scoreboardSortChoice->callback(
+			[](Fl_Widget *w, void *buttonData) {
+							((MainWindow*) buttonData)->buildOutput(
+									((MainWindow*) buttonData),
+									((MainWindow*) buttonData)->scoreboardSortChoice->value());
+						}, ((MainWindow*) data));
 
-	scoreboard.set_modal();
-	scoreboard.show();
+	Fl_Choice puzzleOptions(125, 50, 100, 30, "Puzzle: ");
 
-	while (scoreboard.shown()) {
+	Fl_Box heading(125, 100, 50, 10, "Top 10:");
+	((MainWindow*) data)->scoresList = new Fl_Text_Display(75, 125, 150, 150,
+			"");
+
+	Fl_Button resetButton(125, 290, 50, 30, "Reset");
+	resetButton.callback(
+			[](Fl_Widget *w, void *buttonData) {
+				delete ((MainWindow*) buttonData)->highScores;
+				((MainWindow*) buttonData)->highScores =
+						new PlaitedRecordList();
+
+				((MainWindow*) buttonData)->buildOutput(
+						((MainWindow*) buttonData),
+						((MainWindow*) buttonData)->scoreboardSortChoice->value());
+			}, ((MainWindow*) data));
+
+	((MainWindow*) data)->buildOutput(data,
+			((MainWindow*) data)->scoreboardSortChoice->value());
+
+	scoreboardWindow.add(((MainWindow*) data)->scoreboardSortChoice);
+	scoreboardWindow.add(puzzleOptions);
+	scoreboardWindow.add(heading);
+	scoreboardWindow.add(((MainWindow*) data)->scoresList);
+	scoreboardWindow.add(resetButton);
+
+	scoreboardWindow.set_modal();
+	scoreboardWindow.show();
+
+	while (scoreboardWindow.shown()) {
 		Fl::wait();
 	}
 }

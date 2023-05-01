@@ -92,15 +92,16 @@ void SaveHandler::saveRecords(PlaitedRecordList* records){
 }
 
 PlaitedRecordList* SaveHandler::loadRecords(){
-	ofstream file("records.txt");
+	ifstream file("records.txt");
 	string line;
-	stringstream ss(line);
 	string playerName, puzzle, timestr;
 	PlaitedRecordList* records = new PlaitedRecordList();
 
-	while(getline(ss,line)){
+	while(getline(file,line)){
+		stringstream ss(line);
+
 		if (getline(ss, playerName, ',') && getline(ss, puzzle, ',')
-				&& getline(ss, timestr, ',')){
+				&& getline(ss, timestr)){
 			try{
 				int time = stoi(timestr);
 				PlayerRecord* record = new PlayerRecord(puzzle,playerName,time);
@@ -112,8 +113,6 @@ PlaitedRecordList* SaveHandler::loadRecords(){
 	}
 
 	return records;
-
-
 }
 
 } /* namespace datatier */

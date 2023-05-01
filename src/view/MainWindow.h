@@ -13,6 +13,8 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Text_Buffer.H>
+#include <FL/Fl_Text_Display.H>
 
 #include <string>
 #include <vector>
@@ -35,8 +37,10 @@ private:
 	Fl_Button *quitButton;
 	Fl_Button *playNewWindowButton;
 	Fl_Button *scoreboardButton;
+	Fl_Text_Display *scoresList;
+	Fl_Choice *scoreboardSortChoice;
 
-	PlaitedRecordList highScores;
+	PlaitedRecordList *highScores;
 
 public:
 	/**
@@ -67,6 +71,9 @@ private:
 	void checkSaves();
 
 	void updateInputDisplay(const char *text);
+	void buildOutput(void *data, int sort);
+	void saveRecords(const utils::RecordOutputter &formatter, void *data);
+	void saveRecords();
 };
 
 } /* namespace view */

@@ -21,17 +21,13 @@ RecordNode::RecordNode(PlayerRecord *record) {
 }
 
 RecordNode::~RecordNode() {
-	delete this->record;
-
-	if (this->nextLevel != nullptr) {
-		delete this->nextLevel;
-	}
 	if (this->nextTime != nullptr) {
 		delete this->nextTime;
 	}
-	if (this->nextName != nullptr) {
-		delete this->nextName;
-	}
+
+	this->record = nullptr;
+	this->nextLevel = nullptr;
+	this->nextName = nullptr;
 }
 
 void RecordNode::setNextTime(RecordNode *node) {

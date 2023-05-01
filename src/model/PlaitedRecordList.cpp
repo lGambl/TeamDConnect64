@@ -20,12 +20,8 @@ PlaitedRecordList::~PlaitedRecordList() {
 	if (this->timeHeader != nullptr) {
 		delete this->timeHeader;
 	}
-	if (this->levelHeader != nullptr) {
-		delete this->levelHeader;
-	}
-	if (this->nameHeader != nullptr) {
-		delete this->nameHeader;
-	}
+	this->nameHeader = nullptr;
+	this->levelHeader = nullptr;
 	this->size = 0;
 }
 
