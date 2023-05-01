@@ -21,6 +21,7 @@ private:
 	int time;
 	string playerName;
 	string level;
+	string entry;
 public:
 
 	/**
@@ -61,6 +62,15 @@ public:
 	 */
 	int getTime(){
 		return this->time;
+	}
+
+	/**
+	 * Get the entry
+	 *
+	 * @return the entry
+	 */
+	const string& getEntry() {
+		return this->entry;
 	}
 
 };

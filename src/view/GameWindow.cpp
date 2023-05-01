@@ -58,6 +58,7 @@ GameWindow::GameWindow(int width, int height, const char *title, string& save) :
 
 void GameWindow::buildDisplay(int width, int height) {
 	this->result = false;
+	this->complete = false;
 
 	Fl::add_timeout(1.0, cb_timer, this);
 
@@ -99,11 +100,11 @@ void GameWindow::buildDisplay(int width, int height) {
 	this->resizable(this);
 }
 
-Fl_Fontsize GameWindow::calculateSizes(int width, int height) { // FIXME: Doesn't center when different number of columns
+Fl_Fontsize GameWindow::calculateSizes(int width, int height) {
 	this->inputBoxWidth = (width / 4 * 3) / this->numberColumns;
 	this->inputBoxHeight = (height / 4 * 3) / this->numberRows;
 
-	Fl_Fontsize inputBoxFontSize = 12; // FIXME: Calculate font size
+	Fl_Fontsize inputBoxFontSize = 12;
 
 	this->otherObjectsWidth = 70;
 	this->otherObjectsHeight = 30;
@@ -145,7 +146,7 @@ void GameWindow::buildNodeSquares(int maxNumber, Fl_Fontsize inputBoxFontSize) {
 						this->inputBoxHeight, "", maxNumber, newNode);
 			}
 
-			this->gameBoard.push_back(newControl); // FIXME: Fix font size
+			this->gameBoard.push_back(newControl);
 		}
 	}
 
@@ -159,8 +160,16 @@ bool GameWindow::nextGame() {
 	return this->result;
 }
 
+bool GameWindow::isComplete() {
+	return this->complete;
+}
+
 void GameWindow::enableNextGame() {
 	this->result = true;
+}
+
+PlayerRecord* GameWindow::getGameScore() {
+	return this->playerRecord;
 }
 
 void GameWindow::timer_update() {
@@ -222,8 +231,10 @@ void GameWindow::saveGame() {
 }
 
 void GameWindow::displayCompleteDialog() {
-	Fl_Window *puzzleCompleteDialog = new Fl_Window(300, 150,
+	Fl_Window puzzleCompleteDialog(300, 150,
 			"Puzzle Complete");
+
+	Fl_Box heading(125, 25, 50, 10, "Great job!!");
 
 	bool result = false;
 
@@ -233,23 +244,25 @@ void GameWindow::displayCompleteDialog() {
 		((Fl_Window*) (w->parent()))->hide();
 	} , &result);
 
-	puzzleCompleteDialog->add(ok_button);
+	puzzleCompleteDialog.add(ok_button);
 
-	if (this->difficulty >= 3) {
+	int stopPlayingX = 150;
+	if (this->difficulty >= 6) { // FIXME: Const number of puzzles
 		ok_button.hide();
+		stopPlayingX = 100;
 	}
 
-	Fl_Button cancel_button(150, 50, 100, 30, "Stop Playing");
+	Fl_Button cancel_button(stopPlayingX, 50, 100, 30, "Stop Playing");
 	cancel_button.callback([](Fl_Widget *w, void *buttonData) {
 		*((bool*) (buttonData)) = false;
 		((Fl_Window*) (w->parent()))->hide();
 	} , &result);
 
-	puzzleCompleteDialog->add(cancel_button);
-	puzzleCompleteDialog->set_modal();
-	puzzleCompleteDialog->show();
+	puzzleCompleteDialog.add(cancel_button);
+	puzzleCompleteDialog.set_modal();
+	puzzleCompleteDialog.show();
 
-	while (puzzleCompleteDialog->shown()) {
+	while (puzzleCompleteDialog.shown()) {
 		Fl::wait();
 	}
 
@@ -260,10 +273,44 @@ void GameWindow::displayCompleteDialog() {
 	}
 }
 
+string GameWindow::displayUsernameDialog() {
+	Fl_Window usernameDialog(300, 100, "Enter Username");
+	Fl_Input input(100, 50, 100, 25, "Username:");
+	Fl_Box message(100, 20, 100, 25, "Please enter a username below.");
+
+	string username = "";
+
+	Fl_Button submit_button(220, 50, 70, 25, "Submit");
+	submit_button.callback([](Fl_Widget *w, void *buttonData) {
+		Fl_Window *window = ((Fl_Window*) ((w->parent())));
+		Fl_Input *input = (Fl_Input*) (window->child(0));
+		*((string*) ((buttonData))) = input->value();
+		window->hide();
+	} , &username);
+
+	usernameDialog.add(input);
+	usernameDialog.add(message);
+	usernameDialog.add(submit_button);
+	usernameDialog.set_modal();
+	usernameDialog.show();
+
+	while (usernameDialog.shown()) {
+		Fl::wait();
+	}
+
+	return username;
+}
+
 void GameWindow::cb_check(Fl_Widget*, void *data) {
 	GameWindow* gameData = ((GameWindow*) data);
 	if (gameData->board->isSolved()) {
 		((GameWindow*) data)->displayCompleteDialog();
+
+		string username = gameData->displayUsernameDialog();
+
+		gameData->playerRecord = new PlayerRecord(gameData->puzzleTitle, username,gameData->timerCount);
+
+		gameData->complete = true;
 	}
 	else {
 		fl_message("%s", "Puzzle incomplete!");

@@ -13,6 +13,9 @@ PlayerRecord::PlayerRecord(string level, string playerName, int time) {
 	this->level = level;
 	this->playerName = playerName;
 	this->time = time;
+
+	string split = " : ";
+	this->entry = this->playerName + split + this->level + split + to_string(this->time);
 }
 
 PlayerRecord::~PlayerRecord() {

@@ -13,6 +13,7 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Output.H>
+#include <FL/Fl_Box.H>
 #include <FL/Enumerations.H>
 
 #include "EmptyBoardNode.h"
@@ -26,6 +27,7 @@ using namespace std;
 
 #include <BoardNode.h>
 #include <Board.h>
+#include <PlayerRecord.h>
 using namespace model;
 
 #include <BoardReader.h>
@@ -67,9 +69,12 @@ private:
 
 	bool result;
 	bool pause;
+	bool complete;
 
 	Board* board;
 	vector<BoardNode*> nodes;
+
+	PlayerRecord* playerRecord;
 
 	vector<Fl_Widget*> gameBoard;
 	static const int MINIMUM_SIZE = 300;
@@ -96,8 +101,12 @@ public:
 
 	bool nextGame();
 
+	bool isComplete();
+
+	PlayerRecord* getGameScore();
+
 private:
-	static void cb_timer(void* data);
+	static void cb_timer(void*);
 	static void cb_pause(Fl_Widget*, void*);
 	static void cb_close(Fl_Widget*, void*);
 	static void cb_check(Fl_Widget*, void*);
@@ -115,6 +124,7 @@ private:
 
 	void displayCompleteDialog();
 	void displayPauseDialog();
+	string displayUsernameDialog();
 };
 
 } /* namespace view */

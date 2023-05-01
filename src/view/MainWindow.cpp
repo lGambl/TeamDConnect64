@@ -20,7 +20,7 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	int itemWidth = 70;
 	int itemHeight = 30;
 
-	vector<string> difficulties = { "1", "2", "3", "4", "5" };
+	vector<string> difficulties = { "1", "2", "3", "4", "5", "6", "7" }; // FIXME: Populate
 	this->puzzleChoice = new Fl_Choice(widthCentering - itemWidth / 2,
 			heightCentering - 40, itemWidth, itemHeight, "Puzzle: ");
 
@@ -39,8 +39,12 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 			heightCentering + 5, itemWidth, itemHeight, "Play");
 	this->playNewWindowButton->callback(cb_show, this);
 
+	this->scoreboardButton = new Fl_Button(widthCentering - (itemWidth + 20) / 2,
+				heightCentering + 50, itemWidth + 20, itemHeight, "Scoreboard");
+	this->scoreboardButton->callback(cb_scoreboard, this);
+
 	this->quitButton = new Fl_Button(widthCentering - itemWidth / 2,
-			heightCentering + 50, itemWidth, itemHeight, "Quit");
+			heightCentering + 100, itemWidth, itemHeight, "Quit");
 	this->quitButton->callback(cb_quit, this);
 
 	this->checkSaves();
@@ -69,16 +73,49 @@ void MainWindow::cb_show(Fl_Widget *o, void *data) {
 	window->show();
 	while (window->shown()) {
 		Fl::wait();
-	}
 
-	if (window->nextGame() && !window->shown()) {
-		window = new GameWindow(400, 400, "Game", ++difficulty);
-		window->set_modal();
-		window->show();
+		if (window->isComplete() && !window->getGameScore()->getPlayerName().empty()) {
+			((MainWindow*) data)->highScores.addRecord(window->getGameScore());
+		}
+
+		if (window->nextGame() && !window->shown()) {
+			difficulty++;
+			string title = "Puzzle " + toString(difficulty + 1, "Difficuly must be a number.");
+			window = new GameWindow(400, 400, title.c_str(), difficulty);
+			window->set_modal();
+			window->show();
+		}
 	}
 
 	((MainWindow*) data)->checkSaves();
 	((MainWindow*) data)->saveChoice->value(-1);
+}
+
+void MainWindow::cb_scoreboard(Fl_Widget*, void *data) {
+	Fl_Window scoreboard(300, 250, "High Scoreboard");
+	Fl_Box heading(125, 10, 50, 10, "Top 10:");
+
+	vector<PlayerRecord> scores = ((MainWindow*) data)->highScores.getRecordsByPlayerName(true); // FIXME: allow selection of sort method and direction.
+
+	vector<string> entries;
+	int y = 35;
+	for (vector<PlayerRecord>::size_type i = 0; i < scores.size(); i++) {
+
+		PlayerRecord record = scores[i];
+
+		entries.push_back(record.getEntry());
+		Fl_Box *player_score = new Fl_Box(125, y, 50, 10, entries[i].c_str());
+		scoreboard.add(player_score);
+
+		y += 20;
+	}
+
+	scoreboard.set_modal();
+	scoreboard.show();
+
+	while (scoreboard.shown()) {
+		Fl::wait();
+	}
 }
 
 void MainWindow::cb_quit(Fl_Widget*, void *data) {
@@ -109,7 +146,6 @@ void MainWindow::cb_showContinue(Fl_Widget*, void *data) {
 	}
 
 	string puzzle = ((MainWindow*) data)->saves[choice];
-	cout << puzzle << endl;
 
 	GameWindow *window = new GameWindow(400, 400, puzzle.c_str(), puzzle);
 	window->set_modal();

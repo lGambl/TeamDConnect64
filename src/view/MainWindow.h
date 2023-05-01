@@ -12,11 +12,13 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Box.H>
 
 #include <string>
 #include <vector>
 
-#include "GameWindow.h"
+#include <GameWindow.h>
+#include <PlaitedRecordList.h>
 using namespace std;
 
 namespace view {
@@ -32,6 +34,9 @@ private:
 	Fl_Button *continueGameButton;
 	Fl_Button *quitButton;
 	Fl_Button *playNewWindowButton;
+	Fl_Button *scoreboardButton;
+
+	PlaitedRecordList highScores;
 
 public:
 	/**
@@ -52,6 +57,7 @@ public:
 	~MainWindow();
 
 private:
+	static void cb_scoreboard(Fl_Widget*, void*);
 	static void cb_show(Fl_Widget*, void*);
 	static void cb_showContinue(Fl_Widget*, void*);
 
