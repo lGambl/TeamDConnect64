@@ -47,5 +47,5 @@ The player can choose between what color they want to use for their cells' and t
 The Scoreboard and game saves can have multiple saves with keeping memory loss as low as possible. Records are kept for each board while allowing you to still wipe each record and all records
 
 
-#Disclaimer
+# Disclaimer
 All pictures are from UWG VMWARE LAB MACHINE
