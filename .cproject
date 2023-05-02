@@ -40,10 +40,10 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1087069418" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.1403049859" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.userobjs.263789031" name="Other objects" superClass="gnu.cpp.link.option.userobjs" valueType="userObjs">
-									<listOptionValue builtIn="false" value="/usr/local/lib/libfltk.a"/>
+									<listOptionValue builtIn="false" value="/usr/lib/x86_64-linux-gnu/libfltk.a"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.libs.2013294350" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" value="m -lXrender -lXext -lXft -lfontconfig -ldl -lX11"/>
+									<listOptionValue builtIn="false" value="m -lXrender -lXcursor -lXfixes -lXext -lXft -lfontconfig -lXinerama -ldl -lX11"/>
 								</option>
 								<option id="gnu.cpp.link.option.pthread.60656114" name="Support for pthread (-pthread)" superClass="gnu.cpp.link.option.pthread" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.345830461" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">

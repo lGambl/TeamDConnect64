@@ -28,9 +28,9 @@ string getRecordsOutput(PlaitedRecordList *records, int sort) {
 	stringstream ss;
 	for (PlayerRecord single : list) {
 
-		ss << left << setw(35) << single.getPlayerName().c_str() << setw(35)
-				<< single.getLevel().c_str() << setw(30) << single.getTime()
-				<< endl;
+		ss << left << setw(15) << single.getPlayerName().c_str() << setw(15)
+				<< single.getLevel().c_str() << single.getTime()
+				<< " (sec)" << endl;
 	}
 
 	return ss.str();

@@ -64,7 +64,7 @@ MainWindow::MainWindow(int width, int height, const char *title) :
 	this->colors = getColors();
 
 	SaveHandler formatter;
-	this->highScores = nullptr;
+	this->highScores = formatter.loadAllRecords();
 
 	this->settings = formatter.loadUserSettings();
 	if (this->settings.size() == 0) {
@@ -181,9 +181,12 @@ void MainWindow::buildScoreboardOutput(int level, int sort) {
 		}
 	}
 
+	SaveHandler formatter;
 	if (level >= 0) {
-		SaveHandler formatter;
 		this->highScores = formatter.loadRecords(level);
+	}
+	else {
+		this->highScores = formatter.loadAllRecords();
 	}
 
 	Fl_Text_Buffer *scoresBuffer = new Fl_Text_Buffer();
@@ -240,9 +243,7 @@ void MainWindow::cb_scoreboard(Fl_Widget*, void *data) {
 				((MainWindow*) buttonData)->cb_scoreboard_update(w, buttonData);
 			}, ((MainWindow*) data));
 
-	((MainWindow*) data)->buildScoreboardOutput(
-			((MainWindow*) data)->scoreboardLevelChoice->value() - 1,
-			((MainWindow*) data)->scoreboardSortChoice->value());
+	((MainWindow*) data)->buildScoreboardOutput(-1, 1);
 
 	scoreboardWindow.add(((MainWindow*) data)->scoreboardSortChoice);
 	scoreboardWindow.add(((MainWindow*) data)->scoreboardLevelChoice);
